@@ -16,11 +16,15 @@ class BaseVC: UIViewController {
     }
     
     func setupUI() {
-        // Переопределить в дочерних классах
         view.backgroundColor = .systemBackground
+        // Переопределить в дочерних классах
     }
     
     func setupConstraints() {
         // Переопределить в дочерних классах
+    }
+    
+    func updateColorsForCurrentTheme() {
+        
     }
 }

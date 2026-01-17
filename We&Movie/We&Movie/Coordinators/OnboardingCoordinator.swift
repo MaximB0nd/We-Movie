@@ -18,7 +18,7 @@ class OnboardingCoordinator: Coordinator {
     }
     
     func start() {
-        let viewController = OnboardingVC(coordinator: self)
+        let viewController = OnboardingContainerVC(coordinator: self)
         navigationController.setViewControllers([viewController], animated: false)
     }
     
