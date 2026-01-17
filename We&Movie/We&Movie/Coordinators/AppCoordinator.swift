@@ -22,16 +22,30 @@ class AppCoordinator: Coordinator {
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         
-        showMainFlow()
+        showOnboardingFlow()
     }
     
     func finish() {
         // Очистка при необходимости
     }
     
-    private func showMainFlow() {
-        let mainCoordinator = MainCoordinator(navigationController: navigationController)
-        addChildCoordinator(mainCoordinator)
-        mainCoordinator.start()
+    func showOnboardingFlow() {
+        let onboardingCoordinator = OnboardingCoordinator(navigationController: navigationController)
+        onboardingCoordinator.parentCoordinator = self
+        addChildCoordinator(onboardingCoordinator)
+        onboardingCoordinator.start()
+    }
+    
+    func showAuthFlow() {
+        let authCoordinator = AuthCoordinator(navigationController: navigationController)
+        authCoordinator.parentCoordinator = self
+        addChildCoordinator(authCoordinator)
+        authCoordinator.start()
+    }
+    
+    func showMainTabBarFlow() {
+        let mainTabBarCoordinator = MainTabBarCoordinator(navigationController: navigationController)
+        addChildCoordinator(mainTabBarCoordinator)
+        mainTabBarCoordinator.start()
     }
 }

@@ -1,5 +1,5 @@
 //
-//  MainCoordinator.swift
+//  FavoritesCoordinator.swift
 //  We&Movie
 //
 //  Created by Максим Бондарев on 16/1/26.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainCoordinator: Coordinator {
+class FavoritesCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     
@@ -16,8 +16,8 @@ class MainCoordinator: Coordinator {
     }
     
     func start() {
-        let viewController = MainVC(coordinator: self)
-        navigationController.pushViewController(viewController, animated: false)
+        let viewController = FavoritesVC(coordinator: self)
+        navigationController.setViewControllers([viewController], animated: false)
     }
     
     func finish() {

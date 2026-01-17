@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BaseVM: AnyObject {
+class BaseVM {
     // Базовый класс для всех VM
     // Можно добавить общую логику, например, обработку ошибок
 }
