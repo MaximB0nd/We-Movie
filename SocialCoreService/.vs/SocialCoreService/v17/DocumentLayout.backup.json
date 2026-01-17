@@ -1,0 +1,197 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\dtos\\refreshrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\dtos\\refreshrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\context\\socialcorecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\context\\socialcorecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\models\\refreshtokens.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\models\\refreshtokens.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RefreshRequestDTO.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\DTOs\\RefreshRequestDTO.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\DTOs\\RefreshRequestDTO.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\DTOs\\RefreshRequestDTO.cs",
+              "RelativeToolTip": "SocialCoreService\\DTOs\\RefreshRequestDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T14:09:06.337Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Program.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\Program.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Program.cs",
+              "RelativeToolTip": "SocialCoreService\\Program.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAEQAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T13:48:54.087Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SocialCoreContext.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Context\\SocialCoreContext.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\Context\\SocialCoreContext.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Context\\SocialCoreContext.cs",
+              "RelativeToolTip": "SocialCoreService\\Context\\SocialCoreContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T12:16:37.051Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RegisterDTO.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\DTOs\\RegisterDTO.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\DTOs\\RegisterDTO.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\DTOs\\RegisterDTO.cs",
+              "RelativeToolTip": "SocialCoreService\\DTOs\\RegisterDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T13:15:32.641Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "SocialCoreService\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAkwGcAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T12:08:54.695Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\appsettings.json",
+              "RelativeDocumentMoniker": "SocialCoreService\\appsettings.json",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\appsettings.json",
+              "RelativeToolTip": "SocialCoreService\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-17T13:47:38.592Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Users.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Models\\Users.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\Models\\Users.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Models\\Users.cs",
+              "RelativeToolTip": "SocialCoreService\\Models\\Users.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T12:00:51.522Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LoginDTO.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\DTOs\\LoginDTO.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\DTOs\\LoginDTO.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\DTOs\\LoginDTO.cs",
+              "RelativeToolTip": "SocialCoreService\\DTOs\\LoginDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T13:25:06.179Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "RefreshTokens.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Models\\RefreshTokens.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\Models\\RefreshTokens.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Models\\RefreshTokens.cs",
+              "RelativeToolTip": "SocialCoreService\\Models\\RefreshTokens.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T14:03:13.844Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
