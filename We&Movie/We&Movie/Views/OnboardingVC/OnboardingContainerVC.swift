@@ -18,12 +18,12 @@ class OnboardingContainerVC: BaseVC {
         return pageVC
     }()
     
-    private let pageControl: UIPageControl = {
-        let pageControl = UIPageControl()
+    private let pageControl: CustomPageControl = {
+        let pageControl = CustomPageControl()
         pageControl.numberOfPages = 3
         pageControl.currentPage = 0
-        pageControl.pageIndicatorTintColor = .systemGray4
-        pageControl.currentPageIndicatorTintColor = .systemBlue
+        pageControl.pageIndicatorTintColor = .accentGreen
+        pageControl.currentPageIndicatorTintColor = .accentPink
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl
     }()

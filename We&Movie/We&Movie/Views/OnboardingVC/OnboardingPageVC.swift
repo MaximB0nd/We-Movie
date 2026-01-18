@@ -27,6 +27,7 @@ class OnboardingPageVC: BaseVC {
         label.font = .systemFont(ofSize: 28, weight: .bold)
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.textColor = .accentBlue
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -35,7 +36,7 @@ class OnboardingPageVC: BaseVC {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .regular)
         label.textAlignment = .center
-        label.textColor = .secondaryLabel
+        label.textColor = .accentBlue
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
