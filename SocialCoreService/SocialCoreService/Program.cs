@@ -86,6 +86,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieSync API v1"));
 }
 
+// Автоматические миграции (только для dev!)
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<SocialCoreContext>();
+    db.Database.Migrate();  // Применяет все pending миграции
+}
+
 app.UseHttpsRedirection();
 
 // Включаем CORS
