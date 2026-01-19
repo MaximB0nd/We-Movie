@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -13,10 +17,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|solutionrelative:socialcoreservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4B481170-CD96-4DDB-9E76-18DD8D528EC6}|SocialCoreService\\SocialCoreService.csproj|c:\\users\\ivan2\\we-movie\\socialcoreservice\\socialcoreservice\\context\\socialcorecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -50,34 +50,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 8,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "SocialCoreService\\Properties\\launchSettings.json",
-              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Properties\\launchSettings.json",
-              "RelativeToolTip": "SocialCoreService\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAQwCkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-01-17T20:22:38.232Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Users.cs",
-              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Models\\Users.cs",
-              "RelativeDocumentMoniker": "SocialCoreService\\Models\\Users.cs",
-              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Models\\Users.cs",
-              "RelativeToolTip": "SocialCoreService\\Models\\Users.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T12:00:51.522Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
@@ -89,6 +63,56 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "SocialCoreService\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Properties\\launchSettings.json",
+              "RelativeToolTip": "SocialCoreService\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAQwCcAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-17T20:22:38.232Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Users.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Models\\Users.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\Models\\Users.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Models\\Users.cs",
+              "RelativeToolTip": "SocialCoreService\\Models\\Users.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T12:00:51.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Program.cs",
+              "RelativeDocumentMoniker": "SocialCoreService\\Program.cs",
+              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Program.cs",
+              "RelativeToolTip": "SocialCoreService\\Program.cs",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAAAFMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-17T13:48:54.087Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -104,19 +128,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Program.cs",
-              "RelativeDocumentMoniker": "SocialCoreService\\Program.cs",
-              "ToolTip": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Program.cs",
-              "RelativeToolTip": "SocialCoreService\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEQAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T13:48:54.087Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 5,
               "Title": "RefreshTokens.cs",
               "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\Models\\RefreshTokens.cs",
@@ -125,8 +136,7 @@
               "RelativeToolTip": "SocialCoreService\\Models\\RefreshTokens.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T14:03:13.844Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-17T14:03:13.844Z"
             },
             {
               "$type": "Document",
@@ -138,12 +148,11 @@
               "RelativeToolTip": "SocialCoreService\\Context\\SocialCoreContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T12:16:37.051Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-17T12:16:37.051Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\ivan2\\We-Movie\\SocialCoreService\\SocialCoreService\\appsettings.json",
               "RelativeDocumentMoniker": "SocialCoreService\\appsettings.json",
@@ -151,20 +160,7 @@
               "RelativeToolTip": "SocialCoreService\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-01-17T13:47:38.592Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "WhenOpened": "2026-01-17T13:47:38.592Z"
             },
             {
               "$type": "Document",
