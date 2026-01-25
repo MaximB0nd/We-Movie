@@ -1,6 +1,6 @@
-﻿using WeMovieSync.Core.DTOs;
+﻿using WeMovieSync.Application.DTOs;
 
-namespace WeMovieSync.Core.Interfaces
+namespace WeMovieSync.Application.Interfaces
 {
     public interface IAuthService
     {

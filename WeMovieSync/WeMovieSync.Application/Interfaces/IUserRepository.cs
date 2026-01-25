@@ -1,7 +1,7 @@
 ﻿using WeMovieSync.Core.Models;
 
 
-namespace WeMovieSync.Core.Interfaces
+namespace WeMovieSync.Application.Interfaces
 {
     public interface IUserRepository
     {

@@ -4,17 +4,17 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using WeMovieSync.Core.Interfaces;
-using WeMovieSync.Core.Services;
+using WeMovieSync.Application.Interfaces;
+using WeMovieSync.Application.Services; 
 using WeMovieSync.Infrastructure.Context;
 using WeMovieSync.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Добавляем контроллеры
+// 1. Контроллеры
 builder.Services.AddControllers();
 
-// 2. Swagger с JWT
+// 2. Swagger + JWT-кнопка Authorize
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -61,7 +61,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // 4. Авторизация
 builder.Services.AddAuthorization();
 
-// 5. CORS — временно AllowAll (для Swift и локального фронта)
+// 5. CORS (для Swift и тестов)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -76,30 +76,27 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<WeMovieSyncContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 7. Твои сервисы и репозитории
+// 7. Регистрация сервисов и репозиториев
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-// 8. JwtSettings
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
-builder.Services.AddSingleton(sp =>
-    sp.GetRequiredService<IOptions<JwtSettings>>().Value);
+
 
 var app = builder.Build();
 
-// Middleware pipeline
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WeMovieSync API v1"));
-    app.UseDeveloperExceptionPage();  // Детальные ошибки в браузере (только dev!)
+    app.UseDeveloperExceptionPage(); // детальные ошибки
 }
 
-// CORS
 app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
-app.UseAuthentication();   // Перед UseAuthorization
+
+app.UseAuthentication();   // обязательно перед UseAuthorization
 app.UseAuthorization();
 
 app.MapControllers();

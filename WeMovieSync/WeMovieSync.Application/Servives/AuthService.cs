@@ -1,26 +1,27 @@
-﻿using System;
+﻿using BCrypt.Net;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using BCrypt.Net;
-using WeMovieSync.Core.DTOs;
-using WeMovieSync.Core.Interfaces;
+using WeMovieSync.Application.DTOs;
+using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Core.Models;
 
-namespace WeMovieSync.Core.Services
+namespace WeMovieSync.Application.Services
 {
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
-        private readonly JwtSettings _jwtSettings; 
+        private readonly IConfiguration _configuration;  // ← читаем настройки напрямую из appsettings.json
 
-        public AuthService(IUserRepository userRepository, JwtSettings jwtSettings)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _jwtSettings = jwtSettings ?? throw new ArgumentNullException(nameof(jwtSettings));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public async Task<object> RegisterAsync(RegisterDTO dto)
@@ -31,7 +32,7 @@ namespace WeMovieSync.Core.Services
             var user = new User
             {
                 Email = dto.Email,
-                Nickname = dto.NikeName,
+                Nickname = dto.NikeName,  
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
@@ -110,7 +111,7 @@ namespace WeMovieSync.Core.Services
 
         private string GenerateJwtToken(User user)
         {
-            var key = Encoding.UTF8.GetBytes(_jwtSettings.Key);
+            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -121,9 +122,12 @@ namespace WeMovieSync.Core.Services
                     new Claim(ClaimTypes.Email, user.Email)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(60),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-                Issuer = _jwtSettings.Issuer,
-                Audience = _jwtSettings.Audience
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                ),
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Audience"]
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

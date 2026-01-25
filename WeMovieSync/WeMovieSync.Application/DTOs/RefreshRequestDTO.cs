@@ -1,4 +1,4 @@
-﻿namespace WeMovieSync.Core.DTOs
+﻿namespace WeMovieSync.Application.DTOs
 {
     public class RefreshRequestDto
     {

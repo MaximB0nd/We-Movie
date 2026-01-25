@@ -1,0 +1,6 @@
+@WeMovieSync.API_HostAddress = http://localhost:5217
+
+GET {{WeMovieSync.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

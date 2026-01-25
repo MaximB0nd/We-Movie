@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WeMovieSync.Core.DTOs;
-using WeMovieSync.Core.Interfaces;
+using WeMovieSync.Application.Interfaces;
+using WeMovieSync.Application.DTOs;
 
 namespace MovieSync.API.Controllers
 {
@@ -15,7 +15,6 @@ namespace MovieSync.API.Controllers
             _authService = authService;
         }
 
-        
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
         {

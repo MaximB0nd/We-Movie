@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WeMovieSync.Core.Interfaces;
+using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Infrastructure.Context;
 using WeMovieSync.Core.Models;  
 

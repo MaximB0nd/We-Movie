@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WeMovieSync.Core.DTOs
+namespace WeMovieSync.Application.DTOs
 {
     public class RegisterDTO
     {
