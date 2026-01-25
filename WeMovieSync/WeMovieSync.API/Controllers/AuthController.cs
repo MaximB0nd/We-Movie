@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Application.DTOs;
+using System.Threading.Tasks;
+
 
 namespace MovieSync.API.Controllers
 {
@@ -23,9 +25,13 @@ namespace MovieSync.API.Controllers
                 var result = await _authService.RegisterAsync(dto);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (ArgumentException)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Problem with data"); 
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
             }
         }
 
@@ -37,9 +43,13 @@ namespace MovieSync.API.Controllers
                 var result = await _authService.LoginAsync(dto);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message);
+                return Unauthorized("401 — incorrect password/email"); 
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
             }
         }
 
@@ -51,9 +61,9 @@ namespace MovieSync.API.Controllers
                 var result = await _authService.RefreshTokenAsync(dto);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Unauthorized(ex.Message);
+                return StatusCode(500, "Internal server error");
             }
         }
     }
