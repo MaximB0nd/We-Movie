@@ -1,6 +1,0 @@
-@SocialCoreService_HostAddress = http://localhost:5057
-
-GET {{SocialCoreService_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
