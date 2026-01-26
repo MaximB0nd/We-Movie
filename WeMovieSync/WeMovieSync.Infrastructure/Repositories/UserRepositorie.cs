@@ -33,7 +33,7 @@ namespace WeMovieSync.Infrastructure.Repositories
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(long id)
         {
             return await _context.Users
                 .Include(u => u.RefreshTokens)
