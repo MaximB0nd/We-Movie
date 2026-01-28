@@ -5,7 +5,6 @@ using WeMovieSync.Core.Models;
 
 namespace WeMovieSync.Infrastructure.Repositories
 {
-
     public class UserRepository : IUserRepository
     {
         private readonly WeMovieSyncContext _context;
