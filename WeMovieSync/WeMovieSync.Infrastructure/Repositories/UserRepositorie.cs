@@ -48,7 +48,7 @@ namespace WeMovieSync.Infrastructure.Repositories
 
         public async Task<RefreshToken?> GetRefreshTokenAsync(string token)
         {
-            return await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == token);
+            return await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.HashedToken == token);
         }
 
         public async Task UpdateRefreshTokenAsync(RefreshToken token)

@@ -12,8 +12,8 @@ using WeMovieSync.Infrastructure.Context;
 namespace WeMovieSync.Infrastructure.Migrations
 {
     [DbContext(typeof(WeMovieSyncContext))]
-    [Migration("20260126094758_ChatTables")]
-    partial class ChatTables
+    [Migration("20260128090833_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,10 @@ namespace WeMovieSync.Infrastructure.Migrations
                     b.Property<DateTime>("Expires")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("HashedToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsRevoked")
                         .HasColumnType("boolean");
 
@@ -62,9 +66,6 @@ namespace WeMovieSync.Infrastructure.Migrations
 
                     b.Property<DateTime?>("RevokedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("text");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
@@ -110,13 +111,11 @@ namespace WeMovieSync.Infrastructure.Migrations
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("JoinedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ChatId", "UserId");
@@ -146,9 +145,6 @@ namespace WeMovieSync.Infrastructure.Migrations
                     b.Property<bool>("IsEdited")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("ReadAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<long>("SenderId")
                         .HasColumnType("bigint");
 
@@ -160,9 +156,14 @@ namespace WeMovieSync.Infrastructure.Migrations
                         .HasMaxLength(4096)
                         .HasColumnType("character varying(4096)");
 
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SenderId");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("ChatId", "SentAt")
                         .IsDescending();
@@ -201,7 +202,7 @@ namespace WeMovieSync.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("WeMovieSync.Core.Models.User", "User")
-                        .WithMany()
+                        .WithMany("ReadMessages")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -231,7 +232,7 @@ namespace WeMovieSync.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("WeMovieSync.Core.Models.User", "User")
-                        .WithMany()
+                        .WithMany("ChatMembers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -255,6 +256,10 @@ namespace WeMovieSync.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("WeMovieSync.Core.Models.User", null)
+                        .WithMany("SentMessages")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Chat");
 
                     b.Navigation("Sender");
@@ -274,7 +279,13 @@ namespace WeMovieSync.Infrastructure.Migrations
 
             modelBuilder.Entity("WeMovieSync.Core.Models.User", b =>
                 {
+                    b.Navigation("ChatMembers");
+
+                    b.Navigation("ReadMessages");
+
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("SentMessages");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,17 +4,16 @@ namespace WeMovieSync.Application.DTOs
 {
     public class RegisterDTO
     {
-        [Required(ErrorMessage = "Имя обязательно")]
-        [MinLength(2, ErrorMessage = "Имя должно быть длиннее 2 символов")]
-        public string Name { get; set; } = "";
+        [Required, MinLength(2)]
+        public string Name { get; set; } = null!;
 
-        public string? NikeName { get; set; }    
+        [MaxLength(50)]
+        public string? Nickname { get; set; }
 
-        [Required]
-        [EmailAddress(ErrorMessage = "Некорректный email")]
-        public string Email { get; set; } = "";
+        [Required, EmailAddress]
+        public string Email { get; set; } = null!;
 
         [Required, MinLength(6)]
-        public string Password { get; set; } = "";
+        public string Password { get; set; } = null!;
     }
 }

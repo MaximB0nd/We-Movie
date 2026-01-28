@@ -11,6 +11,9 @@ namespace WeMovieSync.Core.Models
         public string? HashedPassword { get; set; }
 
         public List<RefreshToken> RefreshTokens { get; set; } = new();
+        public List<ChatMember> ChatMembers { get; set; } = new();
+        public List<Message> SentMessages { get; set; } = new();
+        public List<MessageRead> ReadMessages { get; set; } = new();
 
     }
 }

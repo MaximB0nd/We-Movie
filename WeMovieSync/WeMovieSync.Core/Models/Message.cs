@@ -18,10 +18,6 @@ namespace WeMovieSync.Core.Models
 
         public DateTime? DeliveredAt { get; set; }
 
-        // Для 1:1 чатов — когда прочитано получателем
-        // Для групп — НЕ используй это поле! Используй MessageRead
-        public DateTime? ReadAt { get; set; }
-
         public bool IsEdited { get; set; } = false;
         public DateTime? EditedAt { get; set; }
 

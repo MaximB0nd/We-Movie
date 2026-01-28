@@ -32,7 +32,7 @@ namespace WeMovieSync.Application.Services
             var user = new User
             {
                 Email = dto.Email,
-                Nickname = dto.NikeName,  
+                Nickname = dto.Nickname,  
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
@@ -56,7 +56,7 @@ namespace WeMovieSync.Application.Services
             var refreshTokenValue = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
             var refreshToken = new RefreshToken
             {
-                Token = refreshTokenValue,
+                HashedToken = refreshTokenValue,
                 UserId = user.Id,
                 Expires = DateTime.UtcNow.AddDays(30),
                 IsRevoked = false
@@ -92,7 +92,7 @@ namespace WeMovieSync.Application.Services
             var newRefreshValue = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
             var newRefresh = new RefreshToken
             {
-                Token = newRefreshValue,
+                HashedToken = newRefreshValue,
                 UserId = user.Id,
                 Expires = DateTime.UtcNow.AddDays(30),
                 IsRevoked = false
