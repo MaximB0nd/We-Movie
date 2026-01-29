@@ -1,0 +1,7 @@
+%h -x c++-header
+%c -std=c11
+%cpp -std=c++17
+-Wall
+-Wextra
+-pedantic
+-I.
