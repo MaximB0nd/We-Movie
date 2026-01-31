@@ -25,7 +25,9 @@ namespace WeMovieSync.Infrastructure.Repositories
         {
             var chat = await _context.Chats.FindAsync(chatId);
             if (chat != null)
+            {
                 _context.Chats.Remove(chat);
+            }
         }
 
         public async Task<Chat?> GetByIdAsync(long chatId)
@@ -70,8 +72,9 @@ namespace WeMovieSync.Infrastructure.Repositories
                 .FirstOrDefaultAsync(cm => cm.ChatId == chatId && cm.UserId != userId);
 
             if (member != null)
+            {
                 _context.ChatMembers.Remove(member);
-
+            }
         }
 
         public async Task SaveChangesAsync()

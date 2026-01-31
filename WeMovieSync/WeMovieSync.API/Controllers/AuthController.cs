@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WeMovieSync.Application.Interfaces;
+using WeMovieSync.API.Extensions;
 using WeMovieSync.Application.DTOs;
-using System.Threading.Tasks;
+using WeMovieSync.Application.Interfaces;
 
 
 namespace MovieSync.API.Controllers
@@ -23,11 +23,8 @@ namespace MovieSync.API.Controllers
             try
             {
                 var result = await _authService.RegisterAsync(dto);
-                return Ok(result);
-            }
-            catch (ArgumentException)
-            {
-                return BadRequest("Problem with data"); 
+
+                return result.ToActionResult();
             }
             catch (Exception)
             {
@@ -41,11 +38,8 @@ namespace MovieSync.API.Controllers
             try
             {
                 var result = await _authService.LoginAsync(dto);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized("401 — incorrect password/email"); 
+                
+                return result.ToActionResult();
             }
             catch (Exception)
             {
@@ -59,7 +53,8 @@ namespace MovieSync.API.Controllers
             try
             {
                 var result = await _authService.RefreshTokenAsync(dto);
-                return Ok(result);
+
+                return result.ToActionResult();
             }
             catch (Exception)
             {

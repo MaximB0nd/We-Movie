@@ -1,12 +1,11 @@
-﻿using BCrypt.Net;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
+using WeMovieSync.Application.Errors;
+using ErrorOr;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using WeMovieSync.Application.DTOs;
 using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Core.Models;
@@ -24,10 +23,12 @@ namespace WeMovieSync.Application.Services
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public async Task<object> RegisterAsync(RegisterDTO dto)
+        public async Task<ErrorOr<RegistrationResult>> RegisterAsync(RegisterDTO dto)
         {
             if (await _userRepository.EmailExistsAsync(dto.Email))
-                throw new InvalidOperationException("Email уже занят");
+            {
+                return AuthErrors.EmailAlreadyExists;
+            }
 
             var user = new User
             {
@@ -38,25 +39,26 @@ namespace WeMovieSync.Application.Services
 
             await _userRepository.AddUserAsync(user);
 
-            return new
-            {
-                user.Id,
-                user.Email
-            };
+            return new RegistrationResult(user.Nickname, user.Email);
         }
-
-        public async Task<object> LoginAsync(LoginDTO dto)
+        
+        public async Task<ErrorOr<AuthResponse>> LoginAsync(LoginDTO dto)
         {
             var user = await _userRepository.GetByEmailAsync(dto.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.HashedPassword))
-                throw new UnauthorizedAccessException("Неверный email или пароль");
+            {
+                return AuthErrors.InvalidCredentials;
+            }
 
             var accessToken = GenerateJwtToken(user);
 
             var refreshTokenValue = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+
+            var hashedToken = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(refreshTokenValue)));
+
             var refreshToken = new RefreshToken
             {
-                HashedToken = refreshTokenValue,
+                HashedToken = hashedToken,
                 UserId = user.Id,
                 Expires = DateTime.UtcNow.AddDays(30),
                 IsRevoked = false
@@ -64,35 +66,68 @@ namespace WeMovieSync.Application.Services
 
             await _userRepository.AddRefreshTokenAsync(refreshToken);
 
-            return new
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshTokenValue,
-                ExpiresIn = 3600,  // 1 час
-                User = new { user.Id, user.Email }
-            };
+            return new AuthResponse(
+                AccessToken: accessToken,
+                RefreshToken: refreshTokenValue,
+                ExpiresIn: 3600,
+                User: new UserInfo(user.Nickname, user.Email)
+            );
         }
 
-        public async Task<object> RefreshTokenAsync(RefreshRequestDto dto)
+        public async Task<ErrorOr<AuthResponse>> RefreshTokenAsync(RefreshRequestDto dto)
         {
-            var refreshToken = await _userRepository.GetRefreshTokenAsync(dto.RefreshToken);
-            if (refreshToken == null || refreshToken.Expires < DateTime.UtcNow || refreshToken.IsRevoked)
-                throw new UnauthorizedAccessException("Недействительный refresh token");
+            // 1. Проверяем, что токен вообще прислали
+            if (string.IsNullOrWhiteSpace(dto.RefreshToken))
+            {
+                return Error.Validation("RefreshToken обязателен");
+            }
 
+            // 2. Вычисляем SHA256-хэш от plain-токена (один и тот же input → один и тот же хэш)
+            var plainRefresh = dto.RefreshToken.Trim();
+            var hashedInput = Convert.ToBase64String(
+                SHA256.HashData(Encoding.UTF8.GetBytes(plainRefresh))
+            );
+
+            // 3. Ищем токен по хэшу
+            var refreshToken = await _userRepository.GetRefreshTokenAsync(hashedInput);
+
+            // 4. Проверяем существование, срок и отзыв
+            if (refreshToken == null)
+            {
+                return AuthErrors.InvalidRefreshToken;
+            }
+
+            if (refreshToken.Expires < DateTime.UtcNow)
+            {
+                return AuthErrors.InvalidRefreshToken; // можно отдельную ошибку ExpiredRefreshToken
+            }
+
+            if (refreshToken.IsRevoked)
+            {
+                return AuthErrors.InvalidRefreshToken;
+            }
+
+            // 5. Получаем пользователя
             var user = await _userRepository.GetByIdAsync(refreshToken.UserId);
             if (user == null)
-                throw new InvalidOperationException("Пользователь не найден");
+            {
+                return AuthErrors.UserNotFound;
+            }
 
-            // Отзываем старый токен
+            // 6. Отзываем старый токен
             refreshToken.IsRevoked = true;
             refreshToken.RevokedAt = DateTime.UtcNow;
             await _userRepository.UpdateRefreshTokenAsync(refreshToken);
 
-            // Создаём новый
+            // 7. Генерируем новый plain-токен и его хэш
             var newRefreshValue = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+            var newHashedToken = Convert.ToBase64String(
+                SHA256.HashData(Encoding.UTF8.GetBytes(newRefreshValue))
+            );
+
             var newRefresh = new RefreshToken
             {
-                HashedToken = newRefreshValue,
+                HashedToken = newHashedToken,
                 UserId = user.Id,
                 Expires = DateTime.UtcNow.AddDays(30),
                 IsRevoked = false
@@ -100,13 +135,16 @@ namespace WeMovieSync.Application.Services
 
             await _userRepository.AddRefreshTokenAsync(newRefresh);
 
+            // 8. Новый access-токен
             var newAccessToken = GenerateJwtToken(user);
 
-            return new
-            {
-                AccessToken = newAccessToken,
-                RefreshToken = newRefreshValue
-            };
+            // 9. Возвращаем клиенту
+            return new AuthResponse(
+                AccessToken: newAccessToken,
+                RefreshToken: newRefreshValue,          // отдаём plain-токен клиенту
+                ExpiresIn: 3600,
+                User: new UserInfo(user.Nickname, user.Email)
+            );
         }
 
         private string GenerateJwtToken(User user)
