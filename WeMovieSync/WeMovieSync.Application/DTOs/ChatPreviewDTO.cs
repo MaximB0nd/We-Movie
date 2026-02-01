@@ -5,8 +5,9 @@
         public long Id { get; set; }
         public bool IsGroup { get; set; }
         public string? Name { get; set; }
-        public long? LastMessageId { get; set; }
-        public int UnreadCount { get; set; } 
+        public string? LastMessagePreview { get; set; }   
+        public DateTime? LastMessageTime { get; set; }     
+        public int UnreadCount { get; set; }               
         public List<UserPreviewDto> Members { get; set; } = new();
     }
 

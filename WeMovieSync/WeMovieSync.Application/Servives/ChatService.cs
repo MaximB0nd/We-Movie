@@ -25,12 +25,26 @@ namespace WeMovieSync.Application.Services
             {
                 Id = c.Id,
                 IsGroup = c.IsGroup,
-                Name = c.Name,
-                LastMessageId = c.LastActivityAt.HasValue ? c.Messages?.FirstOrDefault()?.Id : null,
+                Name = c.IsGroup ? c.Name : null,
+
+                // Последнее сообщение (берём самое новое)
+                LastMessagePreview = c.Messages?
+                    .OrderByDescending(m => m.SentAt)
+                    .FirstOrDefault()?
+                    .Text?
+                    .Substring(0, Math.Min(100, c.Messages.FirstOrDefault()?.Text?.Length ?? 0)),
+
+                LastMessageTime = c.Messages?
+                    .OrderByDescending(m => m.SentAt)
+                    .FirstOrDefault()?
+                    .SentAt,
+
+                UnreadCount = 0, // TODO: реализовать подсчёт непрочитанных (см. ниже)
+
                 Members = c.Members.Select(m => new UserPreviewDto
                 {
                     Id = m.UserId,
-                    Nickname = m.User?.Nickname
+                    Nickname = m.User?.Nickname ?? "Пользователь",
                 }).ToList()
             }).ToList();
 
