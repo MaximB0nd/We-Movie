@@ -1,0 +1,47 @@
+services:
+  core-backend:
+    build:
+      context: .                         
+      dockerfile: Dockerfile
+    container_name: social-core-backend
+    restart: unless-stopped
+    ports:
+      - "5057:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=we&moviedb;Username=postgres;Password=${DB_PASSWORD}
+      - Jwt__Key=${JWT_KEY}
+      #- Jwt__Issuer=${JWT_ISSUER}
+      #- Jwt__Audience=${JWT_AUDIENCE}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  db:
+    image: postgres:17-alpine
+    container_name: social-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: we&moviedb
+    ports:
+      - "5433:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
+    driver: bridge
