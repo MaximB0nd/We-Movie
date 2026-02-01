@@ -77,6 +77,23 @@ namespace WeMovieSync.Infrastructure.Repositories
             }
         }
 
+        public async Task<Chat> FindPrivateChatBetweenAsync(long chatId, long userId)
+        {
+            var chat = await _context.Chats
+                .Include(c => c.Members)
+                .FirstOrDefaultAsync(c => c.Id == chatId && !c.IsGroup &&
+                    c.Members.Any(m => m.UserId == userId));
+
+            if (chat != null)
+            {
+                return chat;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

@@ -9,6 +9,8 @@ namespace WeMovieSync.Application.Interfaces
         Task AddChatAsync(Chat chat);
         Task DeleteChatAsync(long chatId);
         Task<List<Chat>> GetUserChatsAsync(long userId);
+        Task<Chat> FindPrivateChatBetweenAsync(long userId, long otherId);
+
 
 
         // Members
