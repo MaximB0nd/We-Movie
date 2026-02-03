@@ -5,7 +5,6 @@ using WeMovieSync.Core.Models;
 
 namespace WeMovieSync.Infrastructure.Repositories
 {
-
     public class UserRepository : IUserRepository
     {
         private readonly WeMovieSyncContext _context;
@@ -33,7 +32,7 @@ namespace WeMovieSync.Infrastructure.Repositories
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(long id)
         {
             return await _context.Users
                 .Include(u => u.RefreshTokens)
@@ -48,7 +47,7 @@ namespace WeMovieSync.Infrastructure.Repositories
 
         public async Task<RefreshToken?> GetRefreshTokenAsync(string token)
         {
-            return await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == token);
+            return await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.HashedToken == token);
         }
 
         public async Task UpdateRefreshTokenAsync(RefreshToken token)

@@ -85,12 +85,12 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 var app = builder.Build();
 
 // Middleware
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
+//{
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WeMovieSync API v1"));
     app.UseDeveloperExceptionPage(); // детальные ошибки
-}
+//}
 
 app.UseCors("AllowAll");
 
@@ -100,5 +100,14 @@ app.UseAuthentication();   // обязательно перед UseAuthorization
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+// Migration
+if (app.Environment.IsProduction() )
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<WeMovieSyncContext>();
+    db.Database.Migrate();  // применяет миграции автоматически при запуске
+}
 
 app.Run();

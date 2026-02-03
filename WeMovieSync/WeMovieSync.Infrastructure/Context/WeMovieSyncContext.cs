@@ -12,6 +12,10 @@ namespace WeMovieSync.Infrastructure.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<ChatMember> ChatMembers { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<MessageRead> MessagesReads{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,7 +23,32 @@ namespace WeMovieSync.Infrastructure.Context
                 .HasOne(rt => rt.User)
                 .WithMany(u => u.RefreshTokens) 
                 .HasForeignKey(rt => rt.UserId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ChatMember - составной ключ
+            modelBuilder.Entity<ChatMember>()
+                .HasKey(cm => new { cm.ChatId, cm.UserId });
+
+            // MessageRead - составной ключ
+            modelBuilder.Entity<MessageRead>()
+                .HasKey(mr => new { mr.MessageId, mr.UserId });
+
+            // Индексы для скорости
+            modelBuilder.Entity<Message>()
+                .HasIndex(m => new { m.ChatId, m.SentAt })
+                .IsDescending();
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);  // не удалять сообщения при удалении юзера
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Chat)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ChatId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<RefreshToken>()
                 .HasKey(rt => rt.Id);
