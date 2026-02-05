@@ -12,3 +12,4 @@ public class RefreshToken
     public string? ReplacedByToken { get; set; } // для ротации (опционально)
     public User? User { get; set; } // навигация
 }
+
