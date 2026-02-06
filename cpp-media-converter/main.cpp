@@ -1,9 +1,11 @@
 #include "src/MediaConverter.h"
 
-#include <iostream>
+#include <memory>
 
-int main() {
-	MediaConverter media_converter;
-	media_converter.run("media.mp3", "C:/Program files");
-	return 0;
+int main(int argc, char* argv[]) 
+{
+    std::unique_ptr<MediaConverter> M_CONV = std::make_unique<MediaConverter>();
+    std::string path = argv[1];
+    M_CONV->run(path);
+    return 0;
 }
