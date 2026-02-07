@@ -56,5 +56,21 @@ namespace WeMovieSync.API.Controllers
             }
         }
 
+        // Put: update readStatus of message
+        [Authorize]
+        [HttpPut("messageUpdate/{messageId}")]
+        public async Task<IActionResult> MarkMsgRead(long messageId)
+        {
+            try
+            {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var result = await _msgService.MarkMsgAsReadAsync(messageId, userId);
+                return result.ToActionResult();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            
+        } 
     }
 }
