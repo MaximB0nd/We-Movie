@@ -15,17 +15,17 @@ namespace WeMovieSync.API.Controllers
     [ApiController]
     public class MessageController : ControllerBase
     {
-        private readonly MsgService _msgService;
+        private readonly IMsgService _msgService;
 
-        public MessageController(MsgService msgService)
+        public MessageController(IMsgService msgService)
         {
             _msgService = msgService;
         }
 
-        // GET: get all messages of choosen chat
+        // GET: последние сообщения чата
         [Authorize]
-        [HttpGet("messages/{chatId}/{lastMessageId}")]
-        public async Task<IActionResult> GetMessages(long chatId, long? lastMessageId)
+        [HttpGet("chats/{chatId}/messages")]
+        public async Task<IActionResult> GetMessages(long chatId, long? lastMessageId = null)
         {
             try
             {
@@ -33,20 +33,22 @@ namespace WeMovieSync.API.Controllers
                 var result = await _msgService.GetMsgsAsync(userId, chatId, lastMessageId);
                 return result.ToActionResult();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // TODO: добавить логгер
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        // HOST: add message to DB and sync to all users by web socket
+        // POST: отправить сообщение
         [Authorize]
-        [HttpPost("addMessage")]
-        public async Task<IActionResult> AddMessage([FromBody] SendMessageRequestDTO dto)
+        [HttpPost("chats/{chatId}/messages")]
+        public async Task<IActionResult> SendMessage(long chatId, [FromBody] SendMessageRequestDTO dto)
         {
             try
             {
                 var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                dto.ChatId = chatId; // на всякий случай
                 var result = await _msgService.SendMsgAsync(dto, userId);
                 return result.ToActionResult();
             }
@@ -56,10 +58,10 @@ namespace WeMovieSync.API.Controllers
             }
         }
 
-        // Put: update readStatus of message
+        // PUT: отметить одно сообщение как прочитанное
         [Authorize]
-        [HttpPut("messageUpdate/{messageId}")]
-        public async Task<IActionResult> MarkMsgRead(long messageId)
+        [HttpPut("messages/{messageId}/read")]
+        public async Task<IActionResult> MarkMessageAsRead(long messageId)
         {
             try
             {
@@ -70,7 +72,41 @@ namespace WeMovieSync.API.Controllers
             catch (Exception)
             {
                 return StatusCode(500, "Internal server error");
-            
-        } 
+            }
+        }
+
+        // PUT: отметить все сообщения в чате как прочитанные
+        [Authorize]
+        [HttpPut("chats/{chatId}/read-all")]
+        public async Task<IActionResult> MarkAllAsRead(long chatId)
+        {
+            try
+            {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var result = await _msgService.MarkAllAsReadAsync(userId, chatId);
+                return result.ToActionResult();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        // DELETE: удалить сообщение
+        [Authorize]
+        [HttpDelete("messages/{messageId}")]
+        public async Task<IActionResult> DeleteMessage(long messageId, [FromQuery] bool forAll = false)
+        {
+            try
+            {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var result = await _msgService.DeleteMsgAsync(messageId, userId, forAll);
+                return result.ToActionResult();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
