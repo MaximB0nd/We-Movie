@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WeMovieSync.Application.DTOs
 {
-    public class SendMessageRequestDTO
+    public class DeleteMsgDTO
     {
-        public long ChatId { get; set; }
-        public string Text { get; set; } = string.Empty;
+        public long MessageId { get; set; }
+        public bool forEveryone { get; set; }
     }
 }

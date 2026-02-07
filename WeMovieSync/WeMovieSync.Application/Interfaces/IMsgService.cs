@@ -10,7 +10,7 @@ namespace WeMovieSync.Application.Interfaces
 {
     public interface IMsgService
     {
-        Task<ErrorOr<List<GetMessagesResponseDTO>>> GetMsgsAsync(long chatId);
+        Task<ErrorOr<List<GetMessagesResponseDTO>>> GetMsgsAsync(long currentUserId, long chatId, long? lastMessageId = null);
         Task<ErrorOr<long>> SendMsgAsync(SendMessageRequestDTO dto, long currentUserId);
         Task<ErrorOr<Success>> MarkMsgAsReadAsync(long messageId, long userId);
         Task<ErrorOr<Success>> MarkAllAsReadAsync(long currentUserId, long chatId);

@@ -10,12 +10,11 @@ namespace WeMovieSync.Application.DTOs
     {
         public long MessageId { get; set; }
         public long SenderId { get; set; }
+        public string? SenderNickname { get; set; }
         public long ChatId { get; set; }
         public string? Text { get; set; }
         public DateTime SentAt { get; set; }
         public DateTime? DeliveredAt { get; set; }
-        public string SenderName { get; set; } = string.Empty;
-        public bool IsRead { get; set; }  
-        public bool IsMine { get; set; }
+        public bool IsReadByCurrentUser { get; set; }  
     }
 }

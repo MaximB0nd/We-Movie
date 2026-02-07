@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using ErrorOr;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace WeMovieSync.Infrastructure.Repositories
         public async Task<List<Message>> GetMsgsAsync(long chatId, long? lastMessageId, int limit)
         {
             var query = _context.Messages
+                .AsNoTracking()
                 .Include(m => m.Sender)  // отправитель
                 .Where(m => m.ChatId == chatId);
 
@@ -40,7 +42,7 @@ namespace WeMovieSync.Infrastructure.Repositories
         }
 
         // Adding new msg to DB
-        public async Task<Message> AddMsgsAsync(long chatId, long senderId, string text)
+        public async Task<Message> AddMsgAsync(long chatId, long senderId, string text)
         {
             var message = new Message
             {
@@ -86,6 +88,37 @@ namespace WeMovieSync.Infrastructure.Repositories
                 .FirstOrDefaultAsync(m => m.Id == messageId);
 
             _context.Messages.Remove(message);
+        }
+
+        // Checking message exists or not
+        public async Task<bool> IsMessageExistsAsync(long messageId)
+        {
+            return await _context.Messages
+                .AnyAsync(m => m.Id == messageId);
+        }
+
+        // Getting all unread Messages
+        public async Task<List<long>> GetAllUnreadMsgsAsync(long chatId, long userId)
+        {
+                var query = _context.Messages
+             .AsNoTracking()
+             .Where(m => m.ChatId == chatId)
+             .Where(m => !m.Reads.Any(r => r.UserId == userId));
+
+              return await query
+                    .Select(m => m.Id)
+                    .ToListAsync();
+        }
+
+        // Getting Message by messageId
+        public async Task<Message?> GetMsgByIdAsync(long messageId)
+        {
+            return await _context.Messages
+                .AsNoTracking()                          // ← обязательно для 
+                .Include(m => m.Sender)                  // отправитель (Nickname, Avatar и т.д.)
+                .Include(m => m.Chat)                    // чат (если нужно)
+                .Where(m => m.Id == messageId)  // не возвращаем удалённые
+                .FirstOrDefaultAsync();
         }
 
         public async Task SaveChangesAsync()
