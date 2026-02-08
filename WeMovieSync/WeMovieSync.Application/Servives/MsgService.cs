@@ -10,7 +10,7 @@ using WeMovieSync.Application.Errors;
 using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Core.Models;
 
-namespace WeMovieSync.Application.Servives
+namespace WeMovieSync.Application.Services
 {
     public class MsgService : IMsgService
     {

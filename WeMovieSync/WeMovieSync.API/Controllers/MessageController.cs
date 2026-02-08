@@ -5,7 +5,6 @@ using WeMovieSync.Application.DTOs;
 using WeMovieSync.Application.Extensions;
 using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Application.Services;
-using WeMovieSync.Application.Servives;
 using WeMovieSync.Core.Models;
 
 
@@ -33,7 +32,7 @@ namespace WeMovieSync.API.Controllers
                 var result = await _msgService.GetMsgsAsync(userId, chatId, lastMessageId);
                 return result.ToActionResult();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // TODO: добавить логгер
                 return StatusCode(500, "Internal server error");
