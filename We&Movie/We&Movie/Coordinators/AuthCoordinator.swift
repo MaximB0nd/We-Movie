@@ -18,8 +18,8 @@ class AuthCoordinator: Coordinator {
     }
     
     func start() {
-        let viewController = AuthVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: true)
+        navigationController.setNavigationBarHidden(true, animated: false)
+        showLogin(animated: false)
     }
     
     func finish() {
@@ -29,5 +29,15 @@ class AuthCoordinator: Coordinator {
     func showMainTabBar() {
         parentCoordinator?.showMainTabBarFlow()
         finish()
+    }
+
+    func showLogin(animated: Bool = true) {
+        let viewController = LoginVC(coordinator: self)
+        navigationController.setViewControllers([viewController], animated: animated)
+    }
+
+    func showRegister() {
+        let viewController = RegisterVC(coordinator: self)
+        navigationController.pushViewController(viewController, animated: true)
     }
 }

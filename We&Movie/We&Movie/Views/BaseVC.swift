@@ -27,4 +27,12 @@ class BaseVC: UIViewController {
     func updateColorsForCurrentTheme() {
         
     }
+
+    func showError(_ error: Error) {
+        AlertProvider.shared.show(error: error, on: self)
+    }
+
+    func showMessage(_ message: String, title: String = "Ошибка") {
+        AlertProvider.shared.show(message: message, title: title, on: self)
+    }
 }

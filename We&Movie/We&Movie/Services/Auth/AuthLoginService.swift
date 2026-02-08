@@ -1,15 +1,14 @@
 //
-//  AuthService.swift
+//  AuthLoginService.swift
 //  We&Movie
 //
 
 import Foundation
 
-/// Сервис авторизации: регистрация, логин, обновление токенов, выход.
-/// Удобно интегрировать в AuthVC/VM: вызывать методы и обрабатывать Result/async.
-final class AuthService: Sendable {
+/// Сервис авторизации: логин, обновление токенов, выход.
+final class AuthLoginService: Sendable {
 
-    static let shared = AuthService()
+    static let shared = AuthLoginService()
     private let client: APIClient
     private let tokenStorage: TokenStorage
 
@@ -19,25 +18,6 @@ final class AuthService: Sendable {
     ) {
         self.client = client
         self.tokenStorage = tokenStorage
-    }
-
-    // MARK: - Register
-
-    /// Регистрация. При успехе возвращает данные пользователя (далее показать экран логина).
-    func register(
-        name: String,
-        nickname: String?,
-        email: String,
-        password: String
-    ) async throws -> RegisterResponse {
-        let body = RegisterRequest(
-            name: name,
-            nickname: nickname,
-            email: email,
-            password: password
-        )
-        let data = try await client.post(path: "api/auth/register", body: body, requireAuth: false)
-        return try client.decode(RegisterResponse.self, from: data)
     }
 
     // MARK: - Login
