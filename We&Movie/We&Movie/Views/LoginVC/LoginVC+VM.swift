@@ -7,9 +7,9 @@ import Foundation
 
 extension LoginVC {
     class VM: BaseVM {
-        private let authService: AuthLoginService
+        private let authService: LoginService
 
-        init(authService: AuthLoginService = .shared) {
+        init(authService: LoginService = .shared) {
             self.authService = authService
         }
 

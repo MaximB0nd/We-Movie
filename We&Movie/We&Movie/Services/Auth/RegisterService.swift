@@ -6,9 +6,9 @@
 import Foundation
 
 /// Сервис регистрации: создание нового пользователя.
-final class AuthRegisterService: Sendable {
+final class RegisterService: Sendable {
 
-    static let shared = AuthRegisterService()
+    static let shared = RegisterService()
     private let client: APIClient
 
     init(client: APIClient = .shared) {

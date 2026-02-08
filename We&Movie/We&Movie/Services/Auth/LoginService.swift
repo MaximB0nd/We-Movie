@@ -6,9 +6,9 @@
 import Foundation
 
 /// Сервис авторизации: логин, обновление токенов, выход.
-final class AuthLoginService: Sendable {
+final class LoginService: Sendable {
 
-    static let shared = AuthLoginService()
+    static let shared = LoginService()
     private let client: APIClient
     private let tokenStorage: TokenStorage
 
@@ -24,6 +24,7 @@ final class AuthLoginService: Sendable {
 
     /// Логин. Сохраняет токены в Keychain и возвращает пользователя + данные для UI.
     func login(email: String, password: String) async throws -> LoginResponse {
+        let email = email.lowercased()
         let body = LoginRequest(email: email, password: password)
         let data = try await client.post(path: "api/auth/login", body: body, requireAuth: false)
         let response = try client.decode(LoginResponse.self, from: data)

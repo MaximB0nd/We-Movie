@@ -309,6 +309,11 @@ class LoginVC: BaseVC {
         field.leftViewMode = .always
         field.returnKeyType = .done
         field.delegate = self
+        field.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
+        field.inputAssistantItem.leadingBarButtonGroups = [
+            UIBarButtonItemGroup(barButtonItems: [keyboardTextItem], representativeItem: nil)
+        ]
+        field.inputAssistantItem.trailingBarButtonGroups = []
         if let rightView {
             field.rightView = rightView
             field.rightViewMode = .always
