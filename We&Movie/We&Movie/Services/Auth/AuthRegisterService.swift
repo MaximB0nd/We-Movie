@@ -1,0 +1,34 @@
+//
+//  AuthRegisterService.swift
+//  We&Movie
+//
+
+import Foundation
+
+/// Сервис регистрации: создание нового пользователя.
+final class AuthRegisterService: Sendable {
+
+    static let shared = AuthRegisterService()
+    private let client: APIClient
+
+    init(client: APIClient = .shared) {
+        self.client = client
+    }
+
+    /// Регистрация. При успехе возвращает данные пользователя.
+    func register(
+        name: String,
+        nickname: String?,
+        email: String,
+        password: String
+    ) async throws -> RegisterResponse {
+        let body = RegisterRequest(
+            name: name,
+            nickname: nickname,
+            email: email,
+            password: password
+        )
+        let data = try await client.post(path: "api/auth/register", body: body, requireAuth: false)
+        return try client.decode(RegisterResponse.self, from: data)
+    }
+}
