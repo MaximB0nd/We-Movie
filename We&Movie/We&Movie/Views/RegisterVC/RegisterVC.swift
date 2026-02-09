@@ -39,7 +39,6 @@ class RegisterVC: BaseVC {
         return view
     }()
 
-
     private let subtitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Регистрация"
@@ -64,7 +63,7 @@ class RegisterVC: BaseVC {
         field.backgroundColor = .accentWhite
         field.layer.cornerRadius = 18
         field.autocorrectionType = .no
-        field.autocapitalizationType = .words
+        field.autocapitalizationType = .none
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
     }()
@@ -261,7 +260,7 @@ class RegisterVC: BaseVC {
             contentStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -28),
             contentStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24),
 
-            logoView.heightAnchor.constraint(equalToConstant: 160),
+            logoView.heightAnchor.constraint(equalToConstant: 250),
             logoView.widthAnchor.constraint(lessThanOrEqualTo: contentStack.widthAnchor),
             logoView.centerXAnchor.constraint(equalTo: contentStack.centerXAnchor),
 

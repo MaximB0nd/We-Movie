@@ -32,7 +32,6 @@ class LoginVC: BaseVC {
         return view
     }()
 
-
     private let subtitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Авторизация"
@@ -191,7 +190,7 @@ class LoginVC: BaseVC {
             contentStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
             contentStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -28),
             
-            logoView.heightAnchor.constraint(equalToConstant: 160),
+            logoView.heightAnchor.constraint(equalToConstant: 250),
             logoView.widthAnchor.constraint(lessThanOrEqualTo: contentStack.widthAnchor),
             logoView.centerXAnchor.constraint(equalTo: contentStack.centerXAnchor),
 

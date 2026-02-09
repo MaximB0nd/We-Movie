@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class AuthCoordinator: Coordinator {
     var navigationController: UINavigationController
@@ -33,11 +34,28 @@ class AuthCoordinator: Coordinator {
 
     func showLogin(animated: Bool = true) {
         let viewController = LoginVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: animated)
+        if animated {
+            applyAuthTransition(direction: .fromLeft)
+        }
+        navigationController.setViewControllers([viewController], animated: false)
     }
 
     func showRegister() {
         let viewController = RegisterVC(coordinator: self)
-        navigationController.pushViewController(viewController, animated: true)
+        applyAuthTransition(direction: .fromRight)
+        navigationController.pushViewController(viewController, animated: false)
+    }
+
+    private func applyAuthTransition(
+        direction: CATransitionSubtype,
+        duration: CFTimeInterval = 0.35
+    ) {
+        let transition = CATransition()
+        transition.type = .fade
+        transition.subtype = direction
+        transition.duration = duration
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        transition.isRemovedOnCompletion = true
+        navigationController.view.layer.add(transition, forKey: "authTransition")
     }
 }
