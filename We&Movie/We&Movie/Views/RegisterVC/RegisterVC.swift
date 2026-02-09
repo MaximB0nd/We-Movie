@@ -26,7 +26,7 @@ class RegisterVC: BaseVC {
     private let contentStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 14
+        stack.spacing = 16
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -42,16 +42,16 @@ class RegisterVC: BaseVC {
     private let subtitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Регистрация"
-        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.font = .systemFont(ofSize: 26, weight: .regular)
         label.textAlignment = .center
-        label.textColor = .accentBlue
+        label.textColor = .accentBlueMuted
         return label
     }()
 
     private let nameTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Имя"
-        label.font = .systemFont(ofSize: 14, weight: .semibold)
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textColor = .accentBlue
         return label
     }()
@@ -61,17 +61,19 @@ class RegisterVC: BaseVC {
         field.placeholder = "Введите имя"
         field.font = .systemFont(ofSize: 16, weight: .regular)
         field.backgroundColor = .accentWhite
-        field.layer.cornerRadius = 18
+        field.layer.cornerRadius = 24
         field.autocorrectionType = .no
         field.autocapitalizationType = .none
         field.translatesAutoresizingMaskIntoConstraints = false
+        field.layer.borderWidth = 2
+        field.layer.borderColor = UIColor.accentBlueMuted.cgColor
         return field
     }()
 
     private let emailTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Email"
-        label.font = .systemFont(ofSize: 14, weight: .semibold)
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textColor = .accentBlue
         return label
     }()
@@ -81,19 +83,21 @@ class RegisterVC: BaseVC {
         field.placeholder = "mail@example.com"
         field.font = .systemFont(ofSize: 16, weight: .regular)
         field.backgroundColor = .accentWhite
-        field.layer.cornerRadius = 18
+        field.layer.cornerRadius = 24
         field.autocorrectionType = .no
         field.autocapitalizationType = .none
         field.keyboardType = .emailAddress
         field.textContentType = .emailAddress
         field.translatesAutoresizingMaskIntoConstraints = false
+        field.layer.borderWidth = 2
+        field.layer.borderColor = UIColor.accentBlueMuted.cgColor
         return field
     }()
 
     private let nicknameTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Никнейм"
-        label.font = .systemFont(ofSize: 14, weight: .semibold)
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textColor = .accentBlue
         return label
     }()
@@ -103,17 +107,19 @@ class RegisterVC: BaseVC {
         field.placeholder = "Никнейм"
         field.font = .systemFont(ofSize: 16, weight: .regular)
         field.backgroundColor = .accentWhite
-        field.layer.cornerRadius = 18
+        field.layer.cornerRadius = 24
         field.autocorrectionType = .no
         field.autocapitalizationType = .none
         field.translatesAutoresizingMaskIntoConstraints = false
+        field.layer.borderWidth = 2
+        field.layer.borderColor = UIColor.accentBlueMuted.cgColor
         return field
     }()
 
     private let passwordTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Пароль"
-        label.font = .systemFont(ofSize: 14, weight: .semibold)
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textColor = .accentBlue
         return label
     }()
@@ -123,12 +129,14 @@ class RegisterVC: BaseVC {
         field.placeholder = "Password"
         field.font = .systemFont(ofSize: 16, weight: .regular)
         field.backgroundColor = .accentWhite
-        field.layer.cornerRadius = 18
+        field.layer.cornerRadius = 24
         field.isSecureTextEntry = true
         field.autocorrectionType = .no
         field.autocapitalizationType = .none
         field.textContentType = .newPassword
         field.translatesAutoresizingMaskIntoConstraints = false
+        field.layer.borderWidth = 2
+        field.layer.borderColor = UIColor.accentBlueMuted.cgColor
         return field
     }()
 
@@ -138,7 +146,7 @@ class RegisterVC: BaseVC {
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
         button.backgroundColor = .accentBlue
         button.setTitleColor(.accentWhite, for: .normal)
-        button.layer.cornerRadius = 24
+        button.layer.cornerRadius = 35
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -225,10 +233,10 @@ class RegisterVC: BaseVC {
         scrollView.addSubview(contentView)
         contentView.addSubview(contentStack)
 
-        configureTextField(nameTextField, rightView: nil)
-        configureTextField(emailTextField, rightView: nil)
-        configureTextField(nicknameTextField, rightView: nil)
-        configureTextField(passwordTextField, rightView: makePasswordToggle())
+        configureTextField(nameTextField, rightView: nil, fieldHeight: 50)
+        configureTextField(emailTextField, rightView: nil, fieldHeight: 50)
+        configureTextField(nicknameTextField, rightView: nil, fieldHeight: 50)
+        configureTextField(passwordTextField, rightView: makePasswordToggle(), fieldHeight: 50)
 
         contentStack.addArrangedSubview(logoView)
         contentStack.addArrangedSubview(subtitleLabel)
@@ -264,12 +272,12 @@ class RegisterVC: BaseVC {
             logoView.widthAnchor.constraint(lessThanOrEqualTo: contentStack.widthAnchor),
             logoView.centerXAnchor.constraint(equalTo: contentStack.centerXAnchor),
 
-            nameTextField.heightAnchor.constraint(equalToConstant: 44),
-            emailTextField.heightAnchor.constraint(equalToConstant: 44),
-            nicknameTextField.heightAnchor.constraint(equalToConstant: 44),
-            passwordTextField.heightAnchor.constraint(equalToConstant: 44),
+            nameTextField.heightAnchor.constraint(equalToConstant: 50),
+            emailTextField.heightAnchor.constraint(equalToConstant: 50),
+            nicknameTextField.heightAnchor.constraint(equalToConstant: 50),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 50),
 
-            registerButton.heightAnchor.constraint(equalToConstant: 52)
+            registerButton.heightAnchor.constraint(equalToConstant: 70)
         ])
     }
 
@@ -308,20 +316,40 @@ class RegisterVC: BaseVC {
         coordinator?.showLogin()
     }
 
-    private func configureTextField(_ field: UITextField, rightView: UIView?) {
-        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 1))
+    private func configureTextField(_ field: UITextField, rightView: UIView?, fieldHeight: CGFloat) {
+        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 1))
         field.leftViewMode = .always
         field.returnKeyType = .done
         field.delegate = self
-        if let rightView {
-            field.rightView = rightView
+        field.inputAssistantItem.trailingBarButtonGroups = []
+
+        if let rightView = rightView {
+            rightView.isUserInteractionEnabled = true
+
+            let padding: CGFloat = 12
+            let rightViewSize = rightView.bounds.size == .zero ? CGSize(width: 36, height: 36) : rightView.bounds.size
+            let containerWidth = rightViewSize.width + padding * 2
+            let containerHeight = fieldHeight
+
+            let container = UIView(frame: CGRect(x: 0, y: 0, width: containerWidth, height: containerHeight))
+            container.isUserInteractionEnabled = true
+
+            rightView.frame = CGRect(
+                x: (containerWidth - rightViewSize.width) / 2,
+                y: (containerHeight - rightViewSize.height) / 2,
+                width: rightViewSize.width,
+                height: rightViewSize.height
+            )
+
+            container.addSubview(rightView)
+            field.rightView = container
             field.rightViewMode = .always
         }
     }
 
     private func makePasswordToggle() -> UIView {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "eye"), for: .normal)
+        button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         button.tintColor = .accentBlue
         button.frame = CGRect(x: 0, y: 0, width: 36, height: 36)
         button.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
@@ -330,8 +358,12 @@ class RegisterVC: BaseVC {
 
     @objc private func togglePasswordVisibility() {
         passwordTextField.isSecureTextEntry.toggle()
-        let imageName = passwordTextField.isSecureTextEntry ? "eye" : "eye.slash"
-        (passwordTextField.rightView as? UIButton)?.setImage(UIImage(systemName: imageName), for: .normal)
+        let imageName = passwordTextField.isSecureTextEntry ? "eye.slash" : "eye"
+        if let button = passwordTextField.rightView?.subviews.first as? UIButton {
+            UIView.animate(withDuration: 0.3) {
+                button.setImage(UIImage(systemName: imageName), for: .normal)
+            }
+        }
     }
 
     private func validate(name: String, email: String, nickname: String, password: String) -> Bool {

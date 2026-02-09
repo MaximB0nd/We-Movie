@@ -35,9 +35,17 @@ class LoginVC: BaseVC {
     private let subtitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Авторизация"
-        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.font = .systemFont(ofSize: 26, weight: .regular)
         label.textAlignment = .center
         label.textColor = .accentBlueMuted
+        return label
+    }()
+    
+    private let loginTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Email / Никнейм"
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .accentBlue
         return label
     }()
 
@@ -46,33 +54,37 @@ class LoginVC: BaseVC {
         field.placeholder = "Email или никнейм"
         field.font = .systemFont(ofSize: 16, weight: .regular)
         field.backgroundColor = .accentWhite
-        field.layer.cornerRadius = 18
+        field.layer.cornerRadius = 24
         field.autocorrectionType = .no
         field.autocapitalizationType = .none
-        field.textContentType = .username
+        field.textContentType = .emailAddress
         field.translatesAutoresizingMaskIntoConstraints = false
+        field.layer.borderWidth = 2
+        field.layer.borderColor = UIColor.accentBlueMuted.cgColor
         return field
     }()
 
     private let passwordTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Пароль"
-        label.font = .systemFont(ofSize: 14, weight: .semibold)
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textColor = .accentBlue
         return label
     }()
 
     private let passwordTextField: UITextField = {
         let field = UITextField()
-        field.placeholder = "password"
+        field.placeholder = "Password"
         field.font = .systemFont(ofSize: 16, weight: .regular)
         field.backgroundColor = .accentWhite
-        field.layer.cornerRadius = 18
+        field.layer.cornerRadius = 24
         field.isSecureTextEntry = true
         field.autocorrectionType = .no
         field.autocapitalizationType = .none
-        field.textContentType = .password
+        field.textContentType = .newPassword
         field.translatesAutoresizingMaskIntoConstraints = false
+        field.layer.borderWidth = 2
+        field.layer.borderColor = UIColor.accentBlueMuted.cgColor
         return field
     }()
 
@@ -82,7 +94,7 @@ class LoginVC: BaseVC {
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
         button.backgroundColor = .accentBlue
         button.setTitleColor(.accentWhite, for: .normal)
-        button.layer.cornerRadius = 24
+        button.layer.cornerRadius = 35
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -112,7 +124,7 @@ class LoginVC: BaseVC {
     }()
 
     private lazy var loginFieldStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [loginTextField])
+        let stack = UIStackView(arrangedSubviews: [loginTitleLabel, loginTextField])
         stack.axis = .vertical
         stack.spacing = 6
         return stack
@@ -162,8 +174,8 @@ class LoginVC: BaseVC {
         view.addSubview(contentView)
         contentView.addSubview(contentStack)
 
-        configureTextField(loginTextField, rightView: nil)
-        configureTextField(passwordTextField, rightView: makePasswordToggle())
+        configureTextField(loginTextField, rightView: nil, fieldHeight: 50)
+        configureTextField(passwordTextField, rightView: makePasswordToggle(), fieldHeight: 50)
 
         contentStack.addArrangedSubview(logoView)
         contentStack.addArrangedSubview(subtitleLabel)
@@ -194,10 +206,10 @@ class LoginVC: BaseVC {
             logoView.widthAnchor.constraint(lessThanOrEqualTo: contentStack.widthAnchor),
             logoView.centerXAnchor.constraint(equalTo: contentStack.centerXAnchor),
 
-            loginTextField.heightAnchor.constraint(equalToConstant: 44),
-            passwordTextField.heightAnchor.constraint(equalToConstant: 44),
+            loginTextField.heightAnchor.constraint(equalToConstant: 50),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 50),
 
-            loginButton.heightAnchor.constraint(equalToConstant: 52)
+            loginButton.heightAnchor.constraint(equalToConstant: 70)
         ])
     }
 
@@ -234,21 +246,40 @@ class LoginVC: BaseVC {
         coordinator?.showRegister()
     }
 
-    private func configureTextField(_ field: UITextField, rightView: UIView?) {
-        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 1))
+    private func configureTextField(_ field: UITextField, rightView: UIView?, fieldHeight: CGFloat) {
+        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 1))
         field.leftViewMode = .always
         field.returnKeyType = .done
         field.delegate = self
         field.inputAssistantItem.trailingBarButtonGroups = []
-        if let rightView {
-            field.rightView = rightView
+        
+        if let rightView = rightView {
+            rightView.isUserInteractionEnabled = true
+            
+            let padding: CGFloat = 12
+            let rightViewSize = rightView.bounds.size == .zero ? CGSize(width: 36, height: 36) : rightView.bounds.size
+            let containerWidth = rightViewSize.width + padding * 2
+            let containerHeight = fieldHeight
+            
+            let container = UIView(frame: CGRect(x: 0, y: 0, width: containerWidth, height: containerHeight))
+            container.isUserInteractionEnabled = true
+            
+            rightView.frame = CGRect(
+                x: (containerWidth - rightViewSize.width) / 2,
+                y: (containerHeight - rightViewSize.height) / 2,
+                width: rightViewSize.width,
+                height: rightViewSize.height
+            )
+            
+            container.addSubview(rightView)
+            field.rightView = container
             field.rightViewMode = .always
         }
     }
 
     private func makePasswordToggle() -> UIView {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "eye"), for: .normal)
+        button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         button.tintColor = .accentBlue
         button.frame = CGRect(x: 0, y: 0, width: 36, height: 36)
         button.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
@@ -257,8 +288,13 @@ class LoginVC: BaseVC {
 
     @objc private func togglePasswordVisibility() {
         passwordTextField.isSecureTextEntry.toggle()
-        let imageName = passwordTextField.isSecureTextEntry ? "eye" : "eye.slash"
-        (passwordTextField.rightView as? UIButton)?.setImage(UIImage(systemName: imageName), for: .normal)
+        let imageName = passwordTextField.isSecureTextEntry ? "eye.slash" : "eye"
+        if let button = passwordTextField.rightView?.subviews.first as? UIButton {
+            UIView.animate(withDuration: 0.3) {
+                button.setImage(UIImage(systemName: imageName), for: .normal)
+            }
+        }
+        
     }
 
     private func validate(login: String, password: String) -> Bool {
