@@ -9,6 +9,8 @@ import Foundation
 
 extension ProfileVC {
     class VM: BaseVM {
-        // Бизнес-логика для ProfileVC
+        func logout() {
+            LoginService.shared.logout()
+        }
     }
 }

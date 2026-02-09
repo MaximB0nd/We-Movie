@@ -11,6 +11,8 @@ class ProfileCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     
+    weak var parentCoordinator: MainTabBarCoordinator?
+    
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
@@ -22,5 +24,9 @@ class ProfileCoordinator: Coordinator {
     
     func finish() {
         // Очистка при необходимости
+    }
+
+    func showAuth() {
+        parentCoordinator?.showAuthFlow()
     }
 }

@@ -12,9 +12,14 @@ class OnboardingCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     
     weak var parentCoordinator: AppCoordinator?
+    private let firstLaunchStorage: FirstLaunchStorage
     
-    init(navigationController: UINavigationController) {
+    init(
+        navigationController: UINavigationController,
+        firstLaunchStorage: FirstLaunchStorage = .shared
+    ) {
         self.navigationController = navigationController
+        self.firstLaunchStorage = firstLaunchStorage
     }
     
     func start() {
@@ -27,6 +32,7 @@ class OnboardingCoordinator: Coordinator {
     }
     
     func showAuth() {
+        firstLaunchStorage.markOnboardingCompleted()
         parentCoordinator?.showAuthFlow()
         finish()
     }

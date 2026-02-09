@@ -13,16 +13,19 @@ class AppCoordinator: Coordinator {
     
     private var window: UIWindow?
     private let tokenStorage: TokenStorage
+    private let firstLaunchStorage: FirstLaunchStorage
     private let loginService: LoginService
     
     init(
         window: UIWindow?,
         tokenStorage: TokenStorage = .shared,
+        firstLaunchStorage: FirstLaunchStorage = .shared,
         loginService: LoginService = .shared
     ) {
         self.window = window
         self.navigationController = UINavigationController()
         self.tokenStorage = tokenStorage
+        self.firstLaunchStorage = firstLaunchStorage
         self.loginService = loginService
     }
     
@@ -38,7 +41,10 @@ class AppCoordinator: Coordinator {
     }
     
     func showOnboardingFlow() {
-        let onboardingCoordinator = OnboardingCoordinator(navigationController: navigationController)
+        let onboardingCoordinator = OnboardingCoordinator(
+            navigationController: navigationController,
+            firstLaunchStorage: firstLaunchStorage
+        )
         onboardingCoordinator.parentCoordinator = self
         addChildCoordinator(onboardingCoordinator)
         onboardingCoordinator.start()
@@ -53,6 +59,7 @@ class AppCoordinator: Coordinator {
     
     func showMainTabBarFlow() {
         let mainTabBarCoordinator = MainTabBarCoordinator(navigationController: navigationController)
+        mainTabBarCoordinator.parentCoordinator = self
         addChildCoordinator(mainTabBarCoordinator)
         mainTabBarCoordinator.start()
     }
@@ -60,8 +67,12 @@ class AppCoordinator: Coordinator {
     // MARK: - Private
 
     private func decideInitialFlow() {
-        if !tokenStorage.hasSession {
+        if firstLaunchStorage.isFirstLaunch {
             showOnboardingFlow()
+            return
+        }
+        if !tokenStorage.hasSession {
+            showAuthFlow()
             return
         }
 

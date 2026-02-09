@@ -12,6 +12,7 @@ class MainTabBarCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     
     private var tabBarController: UITabBarController
+    weak var parentCoordinator: AppCoordinator?
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -23,6 +24,7 @@ class MainTabBarCoordinator: Coordinator {
         let searchCoordinator = SearchCoordinator(navigationController: UINavigationController())
         let favoritesCoordinator = FavoritesCoordinator(navigationController: UINavigationController())
         let profileCoordinator = ProfileCoordinator(navigationController: UINavigationController())
+        profileCoordinator.parentCoordinator = self
         let settingsCoordinator = SettingsCoordinator(navigationController: UINavigationController())
         
         addChildCoordinator(homeCoordinator)
@@ -50,7 +52,12 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     func finish() {
-        // Очистка при необходимости
+        parentCoordinator?.removeChildCoordinator(self)
+    }
+
+    func showAuthFlow() {
+        parentCoordinator?.showAuthFlow()
+        finish()
     }
     
     private func setupTabBarItems() {
