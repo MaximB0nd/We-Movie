@@ -1,0 +1,4 @@
+/home/shurik/Documents/PROJECTS/We-Movie/cpp-service/build/CMakeFiles/cpp-service.dir
+/home/shurik/Documents/PROJECTS/We-Movie/cpp-service/build/CMakeFiles/domain-tests.dir
+/home/shurik/Documents/PROJECTS/We-Movie/cpp-service/build/CMakeFiles/edit_cache.dir
+/home/shurik/Documents/PROJECTS/We-Movie/cpp-service/build/CMakeFiles/rebuild_cache.dir
