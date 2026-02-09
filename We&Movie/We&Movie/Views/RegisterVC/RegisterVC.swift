@@ -31,10 +31,10 @@ class RegisterVC: BaseVC {
         return stack
     }()
 
-    private let logoView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemGray4
-        view.layer.cornerRadius = 60
+    private let logoView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "LogoWithText")
+        view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -261,8 +261,8 @@ class RegisterVC: BaseVC {
             contentStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -28),
             contentStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24),
 
-            logoView.heightAnchor.constraint(equalToConstant: 120),
-            logoView.widthAnchor.constraint(equalTo: logoView.heightAnchor),
+            logoView.heightAnchor.constraint(equalToConstant: 160),
+            logoView.widthAnchor.constraint(lessThanOrEqualTo: contentStack.widthAnchor),
             logoView.centerXAnchor.constraint(equalTo: contentStack.centerXAnchor),
 
             nameTextField.heightAnchor.constraint(equalToConstant: 44),

@@ -24,11 +24,10 @@ class LoginVC: BaseVC {
         return stack
     }()
 
-    private let logoView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemGray4
-        view.layer.cornerRadius = 180
-        view.layer.cornerCurve = .continuous
+    private let logoView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "LogoWithText")
+        view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -192,9 +191,8 @@ class LoginVC: BaseVC {
             contentStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
             contentStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -28),
             
-
-            logoView.heightAnchor.constraint(equalToConstant: 60),
-            logoView.widthAnchor.constraint(equalTo: logoView.heightAnchor),
+            logoView.heightAnchor.constraint(equalToConstant: 160),
+            logoView.widthAnchor.constraint(lessThanOrEqualTo: contentStack.widthAnchor),
             logoView.centerXAnchor.constraint(equalTo: contentStack.centerXAnchor),
 
             loginTextField.heightAnchor.constraint(equalToConstant: 44),
