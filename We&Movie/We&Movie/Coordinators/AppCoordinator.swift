@@ -12,17 +12,25 @@ class AppCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     
     private var window: UIWindow?
+    private let tokenStorage: TokenStorage
+    private let loginService: LoginService
     
-    init(window: UIWindow?) {
+    init(
+        window: UIWindow?,
+        tokenStorage: TokenStorage = .shared,
+        loginService: LoginService = .shared
+    ) {
         self.window = window
         self.navigationController = UINavigationController()
+        self.tokenStorage = tokenStorage
+        self.loginService = loginService
     }
     
     func start() {
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-        
-        showOnboardingFlow()
+
+        decideInitialFlow()
     }
     
     func finish() {
@@ -47,5 +55,26 @@ class AppCoordinator: Coordinator {
         let mainTabBarCoordinator = MainTabBarCoordinator(navigationController: navigationController)
         addChildCoordinator(mainTabBarCoordinator)
         mainTabBarCoordinator.start()
+    }
+
+    // MARK: - Private
+
+    private func decideInitialFlow() {
+        if !tokenStorage.hasSession {
+            showOnboardingFlow()
+            return
+        }
+
+        Task { [weak self] in
+            guard let self else { return }
+            let isValidSession = await self.loginService.ensureValidSession()
+            await MainActor.run {
+                if isValidSession {
+                    self.showMainTabBarFlow()
+                } else {
+                    self.showAuthFlow()
+                }
+            }
+        }
     }
 }

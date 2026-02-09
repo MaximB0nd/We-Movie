@@ -286,7 +286,7 @@ class RegisterVC: BaseVC {
         Task { [weak self] in
             do {
                 let normalizedNickname = nickname.isEmpty ? nil : nickname
-                _ = try await self?.viewModel.registerAndLogin(
+                _ = try await self?.viewModel.register(
                     name: name,
                     nickname: normalizedNickname,
                     email: email,
@@ -294,7 +294,7 @@ class RegisterVC: BaseVC {
                 )
                 await MainActor.run {
                     self?.setLoading(false)
-                    self?.coordinator?.showMainTabBar()
+                    self?.coordinator?.showLogin()
                 }
             } catch {
                 await MainActor.run {

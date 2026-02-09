@@ -7,30 +7,24 @@ import Foundation
 
 extension RegisterVC {
     class VM: BaseVM {
-        private let registerService: RegisterService
-        private let loginService: LoginService
+        private let authService: RegisterService
 
-        init(
-            registerService: RegisterService = .shared,
-            loginService: LoginService = .shared
-        ) {
-            self.registerService = registerService
-            self.loginService = loginService
+        init(authService: RegisterService = .shared, loginService: LoginService = .shared) {
+            self.authService = authService
         }
 
-        func registerAndLogin(
+        func register(
             name: String,
             nickname: String?,
             email: String,
             password: String
-        ) async throws -> LoginResponse {
-            _ = try await registerService.register(
+        ) async throws -> RegisterResponse {
+            try await authService.register(
                 name: name,
                 nickname: nickname,
                 email: email,
                 password: password
             )
-            return try await loginService.login(email: email, password: password)
         }
     }
 }

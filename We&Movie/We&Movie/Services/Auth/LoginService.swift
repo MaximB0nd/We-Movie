@@ -32,6 +32,27 @@ final class LoginService: Sendable {
         return response
     }
 
+    /// Логин по никнейму. Сохраняет токены в Keychain и возвращает пользователя + данные для UI.
+    func login(nickname: String, password: String) async throws -> LoginResponse {
+        let body = LoginByNicknameRequest(nickname: nickname, password: password)
+        let data = try await client.post(path: "api/auth/login/nickname", body: body, requireAuth: false)
+        let response = try client.decode(LoginResponse.self, from: data)
+        saveTokens(from: response)
+        return response
+    }
+
+    /// Моковая регистрация по никнейму и паролю.
+    func registerMock(nickname: String, password: String) async throws -> LoginResponse {
+        let response = LoginResponse(
+            accessToken: UUID().uuidString,
+            refreshToken: UUID().uuidString,
+            expiresIn: 3600,
+            user: User(nickname: nickname, email: "mock@local")
+        )
+        saveTokens(from: response)
+        return response
+    }
+
     // MARK: - Refresh (вызывается APIClient автоматически при 401, но можно и вручную)
 
     /// Обновить токены по refreshToken. Обычно не нужен из UI — APIClient делает сам при 401.
@@ -44,6 +65,20 @@ final class LoginService: Sendable {
         let response = try client.decode(RefreshResponse.self, from: data)
         saveTokens(from: response)
         return response
+    }
+
+    /// Проверяет валидность access-токена и при необходимости обновляет.
+    /// Возвращает true, если сессия валидна и можно продолжать.
+    func ensureValidSession() async -> Bool {
+        guard isLoggedIn else { return false }
+        if !tokenStorage.shouldRefreshAccessToken { return true }
+        do {
+            _ = try await refresh()
+            return true
+        } catch {
+            logout()
+            return false
+        }
     }
 
     // MARK: - Logout

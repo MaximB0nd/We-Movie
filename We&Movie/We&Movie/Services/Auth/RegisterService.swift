@@ -22,6 +22,7 @@ final class RegisterService: Sendable {
         email: String,
         password: String
     ) async throws -> RegisterResponse {
+        let email = email.lowercased()
         let body = RegisterRequest(
             name: name,
             nickname: nickname,

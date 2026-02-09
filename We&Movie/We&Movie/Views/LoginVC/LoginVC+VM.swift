@@ -14,7 +14,14 @@ extension LoginVC {
         }
 
         func login(emailOrNickname: String, password: String) async throws -> LoginResponse {
-            try await authService.login(email: emailOrNickname, password: password)
+            if isEmail(emailOrNickname) {
+                return try await authService.login(email: emailOrNickname, password: password)
+            }
+            return try await authService.login(nickname: emailOrNickname, password: password)
+        }
+
+        private func isEmail(_ value: String) -> Bool {
+            value.contains("@") && value.contains(".")
         }
     }
 }

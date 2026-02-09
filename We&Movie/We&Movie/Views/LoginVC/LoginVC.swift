@@ -43,68 +43,15 @@ class LoginVC: BaseVC {
         return label
     }()
 
-    private enum LoginMode {
-        case email
-        case nickname
-    }
-
-    private var loginMode: LoginMode = .email {
-        didSet {
-            updateLoginMode()
-        }
-    }
-
-    private let emailModeButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Email", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
-        button.setTitleColor(.accentBlue, for: .normal)
-        button.backgroundColor = .accentWhite
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.accentBlue.cgColor
-        button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-
-    private let nicknameModeButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Никнейм", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
-        button.setTitleColor(.accentBlue, for: .normal)
-        button.backgroundColor = .accentWhite
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.accentBlue.cgColor
-        button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-
-    private lazy var loginModeStack: UIStackView = {
-        let spacer = UIView()
-        spacer.translatesAutoresizingMaskIntoConstraints = false
-        let separator = UILabel()
-        separator.text = "/"
-        separator.textColor = .accentBlueMuted
-        separator.font = .systemFont(ofSize: 20, weight: .bold)
-        let stack = UIStackView(arrangedSubviews: [emailModeButton, separator, nicknameModeButton, spacer])
-        stack.axis = .horizontal
-        stack.spacing = 6
-        stack.distribution = .fill
-        stack.alignment = .center
-        return stack
-    }()
-
     private let loginTextField: UITextField = {
         let field = UITextField()
-        field.placeholder = "user"
+        field.placeholder = "Email или никнейм"
         field.font = .systemFont(ofSize: 16, weight: .regular)
         field.backgroundColor = .accentWhite
         field.layer.cornerRadius = 18
         field.autocorrectionType = .no
         field.autocapitalizationType = .none
+        field.textContentType = .username
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
     }()
@@ -167,7 +114,7 @@ class LoginVC: BaseVC {
     }()
 
     private lazy var loginFieldStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [loginModeStack, loginTextField])
+        let stack = UIStackView(arrangedSubviews: [loginTextField])
         stack.axis = .vertical
         stack.spacing = 6
         return stack
@@ -227,13 +174,9 @@ class LoginVC: BaseVC {
         contentStack.addArrangedSubview(forgotButton)
         contentStack.addArrangedSubview(bottomStack)
 
-        emailModeButton.addTarget(self, action: #selector(emailModeTapped), for: .touchUpInside)
-        nicknameModeButton.addTarget(self, action: #selector(nicknameModeTapped), for: .touchUpInside)
         loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
         forgotButton.addTarget(self, action: #selector(forgotTapped), for: .touchUpInside)
         registerButton.addTarget(self, action: #selector(registerTapped), for: .touchUpInside)
-
-        updateLoginMode()
     }
 
     override func setupConstraints() {
@@ -254,8 +197,6 @@ class LoginVC: BaseVC {
             logoView.widthAnchor.constraint(equalTo: logoView.heightAnchor),
             logoView.centerXAnchor.constraint(equalTo: contentStack.centerXAnchor),
 
-            emailModeButton.heightAnchor.constraint(equalToConstant: 24),
-            nicknameModeButton.heightAnchor.constraint(equalTo: emailModeButton.heightAnchor),
             loginTextField.heightAnchor.constraint(equalToConstant: 44),
             passwordTextField.heightAnchor.constraint(equalToConstant: 44),
 
@@ -296,23 +237,11 @@ class LoginVC: BaseVC {
         coordinator?.showRegister()
     }
 
-    @objc private func emailModeTapped() {
-        loginMode = .email
-    }
-
-    @objc private func nicknameModeTapped() {
-        loginMode = .nickname
-    }
-
     private func configureTextField(_ field: UITextField, rightView: UIView?) {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 1))
         field.leftViewMode = .always
         field.returnKeyType = .done
         field.delegate = self
-        field.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
-        field.inputAssistantItem.leadingBarButtonGroups = [
-            UIBarButtonItemGroup(barButtonItems: [keyboardTextItem], representativeItem: nil)
-        ]
         field.inputAssistantItem.trailingBarButtonGroups = []
         if let rightView {
             field.rightView = rightView
@@ -337,8 +266,7 @@ class LoginVC: BaseVC {
 
     private func validate(login: String, password: String) -> Bool {
         if login.isEmpty {
-            let message = loginMode == .email ? "Введите email" : "Введите никнейм"
-            showMessage(message)
+            showMessage("Введите email или никнейм")
             return false
         }
 
@@ -348,35 +276,6 @@ class LoginVC: BaseVC {
         }
 
         return true
-    }
-
-    private func updateLoginMode() {
-        switch loginMode {
-        case .email:
-            applySelectedStyle(to: emailModeButton, selected: true)
-            applySelectedStyle(to: nicknameModeButton, selected: false)
-            loginTextField.placeholder = "mail@example.com"
-            loginTextField.keyboardType = .emailAddress
-            loginTextField.textContentType = .username
-        case .nickname:
-            applySelectedStyle(to: emailModeButton, selected: false)
-            applySelectedStyle(to: nicknameModeButton, selected: true)
-            loginTextField.placeholder = "me001"
-            loginTextField.keyboardType = .default
-            loginTextField.textContentType = .username
-        }
-    }
-
-    private func applySelectedStyle(to button: UIButton, selected: Bool) {
-        if selected {
-            button.backgroundColor = .accentBlue
-            button.setTitleColor(.accentWhite, for: .normal)
-            button.layer.borderColor = UIColor.accentBlue.cgColor
-        } else {
-            button.backgroundColor = .accentWhite
-            button.setTitleColor(.accentBlue, for: .normal)
-            button.layer.borderColor = UIColor.accentBlue.cgColor
-        }
     }
 
     private func setLoading(_ isLoading: Bool) {
