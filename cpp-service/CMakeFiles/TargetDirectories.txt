@@ -1,0 +1,3 @@
+/home/shurik/Documents/PROJECTS/We-Movie/cpp-service/CMakeFiles/cpp-service.dir
+/home/shurik/Documents/PROJECTS/We-Movie/cpp-service/CMakeFiles/edit_cache.dir
+/home/shurik/Documents/PROJECTS/We-Movie/cpp-service/CMakeFiles/rebuild_cache.dir

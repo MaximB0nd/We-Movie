@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/cpp-service.dir/link.d "CMakeFiles/cpp-service.dir/main.cpp.o" -o cpp-service  /usr/lib/x86_64-linux-gnu/libpistache.so
