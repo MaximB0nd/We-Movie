@@ -49,7 +49,7 @@ namespace WeMovieSync.Infrastructure.Repositories
         }
 
         // Members
-        public async Task<bool> IsUserInChatsAsync(long userId, long chatId)
+        public async Task<bool> IsUserInChatAsync(long userId, long chatId)
         {
             return await _context.ChatMembers
                 .AnyAsync(cm => cm.ChatId == chatId && cm.UserId == userId);

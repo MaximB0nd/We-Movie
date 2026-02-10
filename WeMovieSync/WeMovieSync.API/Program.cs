@@ -79,8 +79,10 @@ builder.Services.AddDbContext<WeMovieSyncContext>(options =>
 // 7. Регистрация сервисов и репозиториев
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IMsgService, MsgService>();
+builder.Services.AddScoped<IMessagesRepository, MessageRepository>();
 
 var app = builder.Build();
 
