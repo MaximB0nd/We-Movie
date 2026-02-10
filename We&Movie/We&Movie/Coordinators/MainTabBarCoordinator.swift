@@ -55,8 +55,8 @@ class MainTabBarCoordinator: Coordinator {
         parentCoordinator?.removeChildCoordinator(self)
     }
 
-    func showAuthFlow() {
-        parentCoordinator?.showAuthFlow()
+    func showAuthFlowAfterLogout() {
+        parentCoordinator?.showAuthFlowAfterLogout()
         finish()
     }
     

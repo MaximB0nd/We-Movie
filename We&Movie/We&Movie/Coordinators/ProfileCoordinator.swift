@@ -27,6 +27,6 @@ class ProfileCoordinator: Coordinator {
     }
 
     func showAuth() {
-        parentCoordinator?.showAuthFlow()
+        parentCoordinator?.showAuthFlowAfterLogout()
     }
 }

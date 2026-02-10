@@ -31,27 +31,37 @@ class AuthCoordinator: Coordinator {
         parentCoordinator?.showMainTabBarFlow()
         finish()
     }
+    
+    func showLoginAfterLogout(animated: Bool = true) {
+        let viewController = LoginVC(coordinator: self)
+        if animated {
+            applyAuthTransition(type: .moveIn, direction: .fromRight)
+        }
+        navigationController.setViewControllers([viewController], animated: false)
+        
+    }
 
     func showLogin(animated: Bool = true) {
         let viewController = LoginVC(coordinator: self)
         if animated {
-            applyAuthTransition(direction: .fromLeft)
+            applyAuthTransition(type: .fade, direction: .fromLeft)
         }
         navigationController.setViewControllers([viewController], animated: false)
     }
 
     func showRegister() {
         let viewController = RegisterVC(coordinator: self)
-        applyAuthTransition(direction: .fromRight)
+        applyAuthTransition(type: .fade, direction: .fromRight)
         navigationController.pushViewController(viewController, animated: false)
     }
 
     private func applyAuthTransition(
-        direction: CATransitionSubtype,
+        type: CATransitionType,
+        direction: CATransitionSubtype = .fromLeft,
         duration: CFTimeInterval = 0.35
     ) {
         let transition = CATransition()
-        transition.type = .fade
+        transition.type = type
         transition.subtype = direction
         transition.duration = duration
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)

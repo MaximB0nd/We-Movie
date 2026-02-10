@@ -57,6 +57,13 @@ class AppCoordinator: Coordinator {
         authCoordinator.start()
     }
     
+    func showAuthFlowAfterLogout() {
+        let authCoordinator = AuthCoordinator(navigationController: navigationController)
+        authCoordinator.parentCoordinator = self
+        addChildCoordinator(authCoordinator)
+        authCoordinator.showLoginAfterLogout()
+    }
+    
     func showMainTabBarFlow() {
         let mainTabBarCoordinator = MainTabBarCoordinator(navigationController: navigationController)
         mainTabBarCoordinator.parentCoordinator = self
