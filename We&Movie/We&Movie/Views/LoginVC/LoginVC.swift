@@ -10,6 +10,14 @@ class LoginVC: BaseVC {
     private let viewModel: VM
     private weak var coordinator: AuthCoordinator?
 
+    private let scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.alwaysBounceVertical = true
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.showsVerticalScrollIndicator = false
+        return scroll
+    }()
+
     private let contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -98,15 +106,7 @@ class LoginVC: BaseVC {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
-    private let forgotButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Забыли пароль?", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 15, weight: .regular)
-        button.setTitleColor(.accentCyan, for: .normal)
-        return button
-    }()
-
+    
     private let bottomPromptLabel: UILabel = {
         let label = UILabel()
         label.text = "Нет аккаунта?"
@@ -149,7 +149,7 @@ class LoginVC: BaseVC {
         stack.axis = .horizontal
         stack.spacing = 6
         stack.alignment = .center
-        stack.distribution = .equalCentering
+        stack.distribution = .fill
         return stack
     }()
 
@@ -163,15 +163,24 @@ class LoginVC: BaseVC {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private var keyboardHeight: CGFloat = 0
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+        subscribeToKeyboard()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        unsubscribeFromKeyboard()
     }
 
     override func setupUI() {
         super.setupUI()
 
-        view.addSubview(contentView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         contentView.addSubview(contentStack)
 
         configureTextField(loginTextField, rightView: nil, fieldHeight: 50)
@@ -181,11 +190,9 @@ class LoginVC: BaseVC {
         contentStack.addArrangedSubview(subtitleLabel)
         contentStack.addArrangedSubview(formStack)
         contentStack.addArrangedSubview(loginButton)
-        contentStack.addArrangedSubview(forgotButton)
         contentStack.addArrangedSubview(bottomStack)
 
         loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
-        forgotButton.addTarget(self, action: #selector(forgotTapped), for: .touchUpInside)
         registerButton.addTarget(self, action: #selector(registerTapped), for: .touchUpInside)
     }
 
@@ -193,15 +200,22 @@ class LoginVC: BaseVC {
         super.setupConstraints()
 
         NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
 
             contentStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32),
             contentStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
             contentStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -28),
-            
+            contentStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24),
+
             logoView.heightAnchor.constraint(equalToConstant: 250),
             logoView.widthAnchor.constraint(lessThanOrEqualTo: contentStack.widthAnchor),
             logoView.centerXAnchor.constraint(equalTo: contentStack.centerXAnchor),
@@ -234,12 +248,6 @@ class LoginVC: BaseVC {
                 }
             }
         }
-    }
-
-    @objc private func forgotTapped() {
-        let alert = UIAlertController(title: "Скоро будет", message: "Восстановление пароля в разработке.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ок", style: .default))
-        present(alert, animated: true)
     }
 
     @objc private func registerTapped() {
@@ -316,10 +324,65 @@ class LoginVC: BaseVC {
         loginButton.alpha = isLoading ? 0.6 : 1.0
     }
 
+    private func subscribeToKeyboard() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+
+    private func unsubscribeFromKeyboard() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let frame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        let duration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.25
+        keyboardHeight = frame.height - view.safeAreaInsets.bottom
+        UIView.animate(withDuration: duration) { [weak self] in
+            self?.scrollView.contentInset.bottom = self?.keyboardHeight ?? 0
+            self?.scrollView.verticalScrollIndicatorInsets.bottom = self?.keyboardHeight ?? 0
+        }
+    }
+
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let duration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else { return }
+        keyboardHeight = 0
+        UIView.animate(withDuration: duration) { [weak self] in
+            self?.scrollView.contentInset.bottom = 0
+            self?.scrollView.verticalScrollIndicatorInsets.bottom = 0
+        }
+    }
+
+    private func scrollToTextField(_ textField: UITextField) {
+        let rectInContent = contentView.convert(textField.bounds, from: textField)
+        let padding: CGFloat = 24
+        var targetRect = rectInContent.insetBy(dx: 0, dy: -padding)
+        targetRect.size.height += padding * 2
+        scrollView.scrollRectToVisible(targetRect, animated: true)
+    }
+
 }
 
 // MARK: - UITextFieldDelegate
 extension LoginVC: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.scrollToTextField(textField)
+        }
+    }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         view.endEditing(true)
         return true

@@ -14,6 +14,7 @@ class RegisterVC: BaseVC {
         let scroll = UIScrollView()
         scroll.alwaysBounceVertical = true
         scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.showsVerticalScrollIndicator = false
         return scroll
     }()
 
@@ -207,7 +208,7 @@ class RegisterVC: BaseVC {
         stack.axis = .horizontal
         stack.spacing = 6
         stack.alignment = .center
-        stack.distribution = .equalCentering
+        stack.distribution = .fill
         return stack
     }()
 
@@ -221,9 +222,17 @@ class RegisterVC: BaseVC {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private var keyboardHeight: CGFloat = 0
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+        subscribeToKeyboard()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        unsubscribeFromKeyboard()
     }
 
     override func setupUI() {
@@ -395,10 +404,65 @@ class RegisterVC: BaseVC {
         registerButton.alpha = isLoading ? 0.6 : 1.0
     }
 
+    private func subscribeToKeyboard() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+
+    private func unsubscribeFromKeyboard() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let frame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        let duration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.25
+        keyboardHeight = frame.height - view.safeAreaInsets.bottom
+        UIView.animate(withDuration: duration) { [weak self] in
+            self?.scrollView.contentInset.bottom = self?.keyboardHeight ?? 0
+            self?.scrollView.verticalScrollIndicatorInsets.bottom = self?.keyboardHeight ?? 0
+        }
+    }
+
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let duration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else { return }
+        keyboardHeight = 0
+        UIView.animate(withDuration: duration) { [weak self] in
+            self?.scrollView.contentInset.bottom = 0
+            self?.scrollView.verticalScrollIndicatorInsets.bottom = 0
+        }
+    }
+
+    private func scrollToTextField(_ textField: UITextField) {
+        let rectInContent = contentView.convert(textField.bounds, from: textField)
+        let padding: CGFloat = 24
+        var targetRect = rectInContent.insetBy(dx: 0, dy: -padding)
+        targetRect.size.height += padding * 2
+        scrollView.scrollRectToVisible(targetRect, animated: true)
+    }
+
 }
 
 // MARK: - UITextFieldDelegate
 extension RegisterVC: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.scrollToTextField(textField)
+        }
+    }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         view.endEditing(true)
         return true
