@@ -4,10 +4,11 @@ namespace WeMovieSync.Application.DTOs
 {
     public class LoginDTO
     {
-        [Required, EmailAddress]
-        public string Email { get; set; } = null!;
+        public string? Email { get; set; }
+        public string? Nickname { get; set; }
 
         [Required]
+        [MinLength(6)]
         public string Password { get; set; } = null!;
     }
 }

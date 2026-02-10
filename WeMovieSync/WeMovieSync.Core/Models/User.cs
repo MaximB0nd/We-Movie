@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;  
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace WeMovieSync.Core.Models
 {
@@ -6,7 +9,13 @@ namespace WeMovieSync.Core.Models
     {
         [Key]
         public long Id { get; set; }
+
+        [Required]
+        [EmailAddress]
         public string? Email { get; set; }
+        [Required]
+        [MinLength(3)]
+        [MaxLength(32)]
         public string? Nickname { get; set; }
         public string? HashedPassword { get; set; }
 

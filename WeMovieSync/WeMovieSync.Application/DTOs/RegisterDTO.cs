@@ -8,6 +8,7 @@ namespace WeMovieSync.Application.DTOs
         public string Name { get; set; } = null!;
 
         [MaxLength(50)]
+        [Required]
         public string? Nickname { get; set; }
 
         [Required, EmailAddress]

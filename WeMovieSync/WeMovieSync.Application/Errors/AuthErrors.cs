@@ -9,10 +9,15 @@ public static class AuthErrors
             code: "Auth.EmailAlreadyExists",
             description: "Email уже занят");
 
+    public static Error NickAlreadyExists =>
+        Error.Conflict(
+            code: "Auth.NickAlreadyExists",
+            description: "Nick уже занят");
+
     public static Error InvalidCredentials =>
         Error.Unauthorized(
             code: "Auth.InvalidCredentials",
-            description: "Неверный email или пароль");
+            description: "Неверный email/nick или пароль");
 
     public static Error InvalidRefreshToken =>
         Error.Unauthorized(

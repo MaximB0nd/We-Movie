@@ -19,6 +19,11 @@ namespace WeMovieSync.Infrastructure.Repositories
             return await _context.Users.AnyAsync(u => u.Email == email);
         }
 
+        public async Task<bool> NickExistsAsync(string Nick)
+        {
+            return await _context.Users.AnyAsync(u => u.Nickname == Nick);
+        }
+
         public async Task AddUserAsync(User user)
         {
             _context.Users.Add(user);
@@ -30,6 +35,13 @@ namespace WeMovieSync.Infrastructure.Repositories
             return await _context.Users
                 .Include(u => u.RefreshTokens)
                 .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<User?> GetByNickAsync(string Nick)
+        {
+            return await _context.Users
+                .Include(u => u.RefreshTokens)
+                .FirstOrDefaultAsync(u => u.Nickname == Nick);
         }
 
         public async Task<User?> GetByIdAsync(long id)
