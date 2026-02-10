@@ -30,6 +30,11 @@ namespace WeMovieSync.Application.Services
                 return AuthErrors.EmailAlreadyExists;
             }
 
+            if (await _userRepository.NickExistsAsync(dto.Nickname))
+            {
+                return AuthErrors.NickAlreadyExists;
+            }
+
             var user = new User
             {
                 Email = dto.Email,
@@ -44,7 +49,29 @@ namespace WeMovieSync.Application.Services
         
         public async Task<ErrorOr<AuthResponse>> LoginAsync(LoginDTO dto)
         {
-            var user = await _userRepository.GetByEmailAsync(dto.Email);
+            if (string.IsNullOrWhiteSpace(dto.Password))
+            {
+                return AuthErrors.InvalidCredentials;
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.Email) && string.IsNullOrWhiteSpace(dto.Nickname))
+            {
+                return Error.Validation("Необходимо указать email или nickname");
+            }
+
+            User? user = null;
+
+            // Логин по email
+            if (!string.IsNullOrWhiteSpace(dto.Email))
+            {
+                user = await _userRepository.GetByEmailAsync(dto.Email);
+            }
+            // Логин по нику (если email не указан или не найден)
+            else if (!string.IsNullOrWhiteSpace(dto.Nickname))
+            {
+                user = await _userRepository.GetByNickAsync(dto.Nickname);
+            }
+
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.HashedPassword))
             {
                 return AuthErrors.InvalidCredentials;

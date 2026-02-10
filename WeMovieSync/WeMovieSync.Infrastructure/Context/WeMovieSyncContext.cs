@@ -55,6 +55,16 @@ namespace WeMovieSync.Infrastructure.Context
 
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
+
+            // Уникальный индекс для Email
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+            // Уникальный индекс для Nickname
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Nickname)
+                .IsUnique();
         }
 
     }
