@@ -152,17 +152,9 @@ class RegisterVC: BaseVC {
         return button
     }()
 
-    private let bottomPromptLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Есть аккаунт?"
-        label.font = .systemFont(ofSize: 14, weight: .regular)
-        label.textColor = .accentBlue
-        return label
-    }()
-
     private let loginButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Войти", for: .normal)
+        button.setTitle("Есть аккаунт?  Войти", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.setTitleColor(.accentBlue, for: .normal)
         return button
@@ -200,15 +192,6 @@ class RegisterVC: BaseVC {
         let stack = UIStackView(arrangedSubviews: [nameFieldStack, emailFieldStack, nicknameFieldStack, passwordFieldStack])
         stack.axis = .vertical
         stack.spacing = 12
-        return stack
-    }()
-
-    private lazy var bottomStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [bottomPromptLabel, loginButton])
-        stack.axis = .horizontal
-        stack.spacing = 6
-        stack.alignment = .center
-        stack.distribution = .fill
         return stack
     }()
 
@@ -251,7 +234,7 @@ class RegisterVC: BaseVC {
         contentStack.addArrangedSubview(subtitleLabel)
         contentStack.addArrangedSubview(formStack)
         contentStack.addArrangedSubview(registerButton)
-        contentStack.addArrangedSubview(bottomStack)
+        contentStack.addArrangedSubview(loginButton)
 
         registerButton.addTarget(self, action: #selector(registerTapped), for: .touchUpInside)
         loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)

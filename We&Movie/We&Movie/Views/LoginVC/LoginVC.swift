@@ -106,18 +106,10 @@ class LoginVC: BaseVC {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-    private let bottomPromptLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Нет аккаунта?"
-        label.font = .systemFont(ofSize: 14, weight: .regular)
-        label.textColor = .accentBlue
-        return label
-    }()
 
     private let registerButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Регистрация", for: .normal)
+        button.setTitle("Нет аккаунта?  Регистрация", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.setTitleColor(.accentBlue, for: .normal)
         return button
@@ -141,15 +133,6 @@ class LoginVC: BaseVC {
         let stack = UIStackView(arrangedSubviews: [loginFieldStack, passwordFieldStack])
         stack.axis = .vertical
         stack.spacing = 12
-        return stack
-    }()
-
-    private lazy var bottomStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [bottomPromptLabel, registerButton])
-        stack.axis = .horizontal
-        stack.spacing = 6
-        stack.alignment = .center
-        stack.distribution = .fill
         return stack
     }()
 
@@ -190,7 +173,7 @@ class LoginVC: BaseVC {
         contentStack.addArrangedSubview(subtitleLabel)
         contentStack.addArrangedSubview(formStack)
         contentStack.addArrangedSubview(loginButton)
-        contentStack.addArrangedSubview(bottomStack)
+        contentStack.addArrangedSubview(registerButton)
 
         loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
         registerButton.addTarget(self, action: #selector(registerTapped), for: .touchUpInside)
@@ -223,7 +206,7 @@ class LoginVC: BaseVC {
             loginTextField.heightAnchor.constraint(equalToConstant: 50),
             passwordTextField.heightAnchor.constraint(equalToConstant: 50),
 
-            loginButton.heightAnchor.constraint(equalToConstant: 70)
+            loginButton.heightAnchor.constraint(equalToConstant: 70),
         ])
     }
 
