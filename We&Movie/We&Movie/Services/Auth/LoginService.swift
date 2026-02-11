@@ -11,44 +11,30 @@ final class LoginService: Sendable {
     static let shared = LoginService()
     private let client: APIClient
     private let tokenStorage: TokenStorage
+    private let registerService: RegisterService
 
     init(
         client: APIClient = .shared,
-        tokenStorage: TokenStorage = .shared
+        tokenStorage: TokenStorage = .shared,
+        registerService: RegisterService = .shared
     ) {
         self.client = client
         self.tokenStorage = tokenStorage
+        self.registerService = registerService
     }
 
     // MARK: - Login
 
-    /// Логин. Сохраняет токены в Keychain и возвращает пользователя + данные для UI.
-    func login(email: String, password: String) async throws -> LoginResponse {
-        let email = email.lowercased()
-        let body = LoginRequest(email: email, password: password)
+    /// Логин по email или никнейму. Сохраняет токены в Keychain и возвращает пользователя + данные для UI.
+    func login(emailOrNickname: String, password: String) async throws -> LoginResponse {
+        let body: LoginRequest
+        if emailOrNickname.contains("@") && emailOrNickname.contains(".") {
+            body = LoginRequest(email: emailOrNickname, password: password)
+        } else {
+            body = LoginRequest(nickname: emailOrNickname, password: password)
+        }
         let data = try await client.post(path: "api/auth/login", body: body, requireAuth: false)
         let response = try client.decode(LoginResponse.self, from: data)
-        saveTokens(from: response)
-        return response
-    }
-
-    /// Логин по никнейму. Сохраняет токены в Keychain и возвращает пользователя + данные для UI.
-    func login(nickname: String, password: String) async throws -> LoginResponse {
-        let body = LoginByNicknameRequest(nickname: nickname, password: password)
-        let data = try await client.post(path: "api/auth/login/nickname", body: body, requireAuth: false)
-        let response = try client.decode(LoginResponse.self, from: data)
-        saveTokens(from: response)
-        return response
-    }
-
-    /// Моковая регистрация по никнейму и паролю.
-    func registerMock(nickname: String, password: String) async throws -> LoginResponse {
-        let response = LoginResponse(
-            accessToken: UUID().uuidString,
-            refreshToken: UUID().uuidString,
-            expiresIn: 3600,
-            user: User(nickname: nickname, email: "mock@local")
-        )
         saveTokens(from: response)
         return response
     }
