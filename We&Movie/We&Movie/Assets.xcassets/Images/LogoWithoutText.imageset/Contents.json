@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "норм полная.png",
+      "filename" : "без надписи белая.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "лого2.png",
+      "filename" : "темная без надписи.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "норм полная 1.png",
+      "filename" : "без надписи белая 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "лого2 1.png",
+      "filename" : "темная без надписи 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "норм полная 2.png",
+      "filename" : "без надписи белая 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "лого2 2.png",
+      "filename" : "темная без надписи 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

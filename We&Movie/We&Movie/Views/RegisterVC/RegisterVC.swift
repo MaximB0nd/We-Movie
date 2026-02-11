@@ -291,9 +291,10 @@ class RegisterVC: BaseVC {
                     email: email,
                     password: password
                 )
+                _ = try await self?.viewModel.login(emailOrNickname: email, password: password)
                 await MainActor.run {
                     self?.setLoading(false)
-                    self?.coordinator?.showLogin()
+                    self?.coordinator?.showMainTabBar()
                 }
             } catch {
                 await MainActor.run {

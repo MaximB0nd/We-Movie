@@ -144,7 +144,8 @@ final class APIClient: Sendable {
 
 extension APIError {
     static func from(response: HTTPURLResponse, data: Data) -> APIError {
-        let message = (try? JSONDecoder().decode(APIErrorResponse.self, from: data))?.error
+        let message = parseErrorMessage(from: data)
+
         switch response.statusCode {
         case 400: return .badRequest(message ?? "Bad Request")
         case 401: return .unauthorized(message ?? "Необходима авторизация")
@@ -154,5 +155,22 @@ extension APIError {
         case 500...599: return .serverError(message ?? "Ошибка сервера")
         default: return .unknown(response.statusCode, message)
         }
+    }
+
+    private static func parseErrorMessage(from data: Data) -> String? {
+        if let decoded = try? JSONDecoder().decode(String.self, from: data), !decoded.isEmpty {
+            return decoded
+        }
+        
+        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           let msg = json["detail"] as? String ?? json["message"] as? String ?? json["error"] as? String {
+            return msg
+        }
+        let raw = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard var s = raw, s.count >= 2 else { return raw }
+        if s.first == "\"" && s.last == "\"" {
+            s = String(s.dropFirst().dropLast())
+        }
+        return s.isEmpty ? raw : s
     }
 }
