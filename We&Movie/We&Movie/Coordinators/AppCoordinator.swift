@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class AppCoordinator: Coordinator {
     var navigationController: UINavigationController
@@ -29,7 +30,10 @@ class AppCoordinator: Coordinator {
         self.loginService = loginService
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
 
@@ -40,35 +44,46 @@ class AppCoordinator: Coordinator {
         // Очистка при необходимости
     }
     
-    func showOnboardingFlow() {
+    func showOnboardingFlow(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let onboardingCoordinator = OnboardingCoordinator(
             navigationController: navigationController,
             firstLaunchStorage: firstLaunchStorage
         )
         onboardingCoordinator.parentCoordinator = self
         addChildCoordinator(onboardingCoordinator)
-        onboardingCoordinator.start()
+        onboardingCoordinator.start(
+            transitionType: transitionType,
+            direction: direction
+        )
     }
     
-    func showAuthFlow() {
+    func showAuthFlow(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let authCoordinator = AuthCoordinator(navigationController: navigationController)
         authCoordinator.parentCoordinator = self
         addChildCoordinator(authCoordinator)
-        authCoordinator.start()
+        authCoordinator.start(
+            transitionType: transitionType,
+            direction: direction
+        )
     }
     
-    func showAuthFlowAfterLogout() {
-        let authCoordinator = AuthCoordinator(navigationController: navigationController)
-        authCoordinator.parentCoordinator = self
-        addChildCoordinator(authCoordinator)
-        authCoordinator.showLoginAfterLogout()
-    }
-    
-    func showMainTabBarFlow() {
+    func showMainTabBarFlow(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let mainTabBarCoordinator = MainTabBarCoordinator(navigationController: navigationController)
         mainTabBarCoordinator.parentCoordinator = self
         addChildCoordinator(mainTabBarCoordinator)
-        mainTabBarCoordinator.start()
+        mainTabBarCoordinator.start(
+            transitionType: transitionType,
+            direction: direction
+        )
     }
 
     // MARK: - Private

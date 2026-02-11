@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class FavoritesCoordinator: Coordinator {
     var navigationController: UINavigationController
@@ -15,9 +16,12 @@ class FavoritesCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let viewController = FavoritesVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: false)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {

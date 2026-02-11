@@ -158,14 +158,16 @@ extension APIError {
     }
 
     private static func parseErrorMessage(from data: Data) -> String? {
-        if let decoded = try? JSONDecoder().decode(String.self, from: data), !decoded.isEmpty {
-            return decoded
-        }
         
         if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
            let msg = json["detail"] as? String ?? json["message"] as? String ?? json["error"] as? String {
             return msg
         }
+        
+        if let decoded = try? JSONDecoder().decode(String.self, from: data), !decoded.isEmpty {
+            return decoded
+        }
+        
         let raw = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
         guard var s = raw, s.count >= 2 else { return raw }
         if s.first == "\"" && s.last == "\"" {

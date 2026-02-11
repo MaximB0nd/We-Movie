@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class OnboardingCoordinator: Coordinator {
     var navigationController: UINavigationController
@@ -22,9 +23,12 @@ class OnboardingCoordinator: Coordinator {
         self.firstLaunchStorage = firstLaunchStorage
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let viewController = OnboardingContainerVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: false)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {

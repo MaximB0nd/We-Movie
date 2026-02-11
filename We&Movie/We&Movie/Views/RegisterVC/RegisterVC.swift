@@ -306,7 +306,9 @@ class RegisterVC: BaseVC {
     }
 
     @objc private func loginTapped() {
-        coordinator?.showLogin()
+        coordinator?.showLogin(
+            transitionType: .fade
+        )
     }
 
     private func configureTextField(_ field: UITextField, rightView: UIView?, fieldHeight: CGFloat) {

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class ProfileCoordinator: Coordinator {
     var navigationController: UINavigationController
@@ -17,9 +18,12 @@ class ProfileCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let viewController = ProfileVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: false)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {
@@ -27,6 +31,6 @@ class ProfileCoordinator: Coordinator {
     }
 
     func showAuth() {
-        parentCoordinator?.showAuthFlowAfterLogout()
+        parentCoordinator?.showAuthFlow()
     }
 }

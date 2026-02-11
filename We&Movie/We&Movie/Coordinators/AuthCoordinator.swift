@@ -18,9 +18,13 @@ class AuthCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         navigationController.setNavigationBarHidden(true, animated: false)
-        showLogin(animated: false)
+        let viewController = LoginVC(coordinator: self)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {
@@ -28,44 +32,26 @@ class AuthCoordinator: Coordinator {
     }
     
     func showMainTabBar() {
-        parentCoordinator?.showMainTabBarFlow()
+        parentCoordinator?.showMainTabBarFlow(
+            transitionType: .reveal,
+            direction: .fromRight
+        )
         finish()
     }
-    
-    func showLoginAfterLogout(animated: Bool = true) {
-        let viewController = LoginVC(coordinator: self)
-        if animated {
-            applyAuthTransition(type: .moveIn, direction: .fromRight)
-        }
-        navigationController.setViewControllers([viewController], animated: false)
-        
-    }
 
-    func showLogin(animated: Bool = true) {
-        let viewController = LoginVC(coordinator: self)
-        if animated {
-            applyAuthTransition(type: .fade, direction: .fromLeft)
-        }
-        navigationController.setViewControllers([viewController], animated: false)
-    }
-
-    func showRegister() {
-        let viewController = RegisterVC(coordinator: self)
-        applyAuthTransition(type: .fade, direction: .fromRight)
-        navigationController.pushViewController(viewController, animated: false)
-    }
-
-    private func applyAuthTransition(
-        type: CATransitionType,
-        direction: CATransitionSubtype = .fromLeft,
-        duration: CFTimeInterval = 0.35
+    func showLogin(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
     ) {
-        let transition = CATransition()
-        transition.type = type
-        transition.subtype = direction
-        transition.duration = duration
-        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        transition.isRemovedOnCompletion = true
-        navigationController.view.layer.add(transition, forKey: "authTransition")
+        let viewController = LoginVC(coordinator: self)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
+    }
+
+    func showRegister(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
+        let viewController = RegisterVC(coordinator: self)
+        pushViewController(viewController, transitionType: transitionType, direction: direction)
     }
 }
