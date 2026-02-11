@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class SearchCoordinator: Coordinator {
     var navigationController: UINavigationController
@@ -15,9 +16,12 @@ class SearchCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let viewController = SearchVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: false)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {

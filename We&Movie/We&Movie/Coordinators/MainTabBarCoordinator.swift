@@ -6,23 +6,29 @@
 //
 
 import UIKit
+import QuartzCore
 
 class MainTabBarCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     
     private var tabBarController: UITabBarController
+    weak var parentCoordinator: AppCoordinator?
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
         self.tabBarController = UITabBarController()
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let homeCoordinator = HomeCoordinator(navigationController: UINavigationController())
         let searchCoordinator = SearchCoordinator(navigationController: UINavigationController())
         let favoritesCoordinator = FavoritesCoordinator(navigationController: UINavigationController())
         let profileCoordinator = ProfileCoordinator(navigationController: UINavigationController())
+        profileCoordinator.parentCoordinator = self
         let settingsCoordinator = SettingsCoordinator(navigationController: UINavigationController())
         
         addChildCoordinator(homeCoordinator)
@@ -46,7 +52,7 @@ class MainTabBarCoordinator: Coordinator {
         ]
         
         setupTabBarItems()
-        navigationController.setViewControllers([tabBarController], animated: false)
+        setViewControllers([tabBarController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {
@@ -61,5 +67,12 @@ class MainTabBarCoordinator: Coordinator {
         viewControllers[2].tabBarItem = UITabBarItem(title: "Избранное", image: UIImage(systemName: "heart.fill"), tag: 2)
         viewControllers[3].tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.fill"), tag: 3)
         viewControllers[4].tabBarItem = UITabBarItem(title: "Настройки", image: UIImage(systemName: "gearshape.fill"), tag: 4)
+    }
+    
+    func showAuthFlow() {
+        parentCoordinator?.showAuthFlow(
+            transitionType: .reveal,
+            direction: .fromRight
+        )
     }
 }

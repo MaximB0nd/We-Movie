@@ -6,20 +6,29 @@
 //
 
 import UIKit
+import QuartzCore
 
 class OnboardingCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     
     weak var parentCoordinator: AppCoordinator?
+    private let firstLaunchStorage: FirstLaunchStorage
     
-    init(navigationController: UINavigationController) {
+    init(
+        navigationController: UINavigationController,
+        firstLaunchStorage: FirstLaunchStorage = .shared
+    ) {
         self.navigationController = navigationController
+        self.firstLaunchStorage = firstLaunchStorage
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let viewController = OnboardingContainerVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: false)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {
@@ -27,6 +36,7 @@ class OnboardingCoordinator: Coordinator {
     }
     
     func showAuth() {
+        firstLaunchStorage.markOnboardingCompleted()
         parentCoordinator?.showAuthFlow()
         finish()
     }
