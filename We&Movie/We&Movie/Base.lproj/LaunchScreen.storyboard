@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="LogoWithoutText" translatesAutoresizingMaskIntoConstraints="NO" id="mzu-C0-DRD">
-                                <rect key="frame" x="76" y="363" width="240" height="128"/>
+                                <rect key="frame" x="75" y="363" width="240" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
@@ -31,7 +31,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LogoWithoutText" width="341.33334350585938" height="341.33334350585938"/>
+        <image name="LogoWithoutText" width="322" height="322"/>
         <namedColor name="AccentBackground">
             <color red="0.94117647058823528" green="0.96470588235294119" blue="0.96470588235294119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
