@@ -16,6 +16,7 @@ namespace WeMovieSync.Infrastructure.Context
         public DbSet<ChatMember> ChatMembers { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageRead> MessagesReads{ get; set; }
+        public DbSet<FilmCatalog> FilmCatalog { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,6 +65,10 @@ namespace WeMovieSync.Infrastructure.Context
             // Уникальный индекс для Nickname
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Nickname)
+                .IsUnique();
+
+            modelBuilder.Entity<FilmCatalog>()
+                .HasIndex(f => f.Token)
                 .IsUnique();
         }
 
