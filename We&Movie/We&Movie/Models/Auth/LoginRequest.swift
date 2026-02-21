@@ -5,21 +5,21 @@
 
 import Foundation
 
-/// Запрос логина: POST /api/auth/login
-/// email или nickname — одно из полей должно быть указано
+/// Login request: POST /api/auth/login
+/// Either email or nickname must be specified
 struct LoginRequest: Codable, Sendable {
     let email: String?
     let nickname: String?
     let password: String
 
-    /// Логин по email
+    /// Login by email
     init(email: String, password: String) {
         self.email = email.lowercased()
         self.nickname = nil
         self.password = password
     }
 
-    /// Логин по никнейму
+    /// Login by nickname
     init(nickname: String, password: String) {
         self.email = nil
         self.nickname = nickname

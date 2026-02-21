@@ -5,8 +5,8 @@
 
 import Foundation
 
-/// Запрос создания группового чата: POST /api/chat/group
+/// Create group chat request: POST /api/chat/group
 struct CreateGroupChatRequest: Codable, Sendable {
     let name: String
-    let initialMemberIds: [Int]  // без создателя
+    let initialMemberIds: [Int]  // without creator
 }

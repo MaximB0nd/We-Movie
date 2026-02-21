@@ -2,7 +2,7 @@
 //  UIView+addSubviews.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 17/1/26.
+//  Created by Maxim Bondarev on 17/1/26.
 //
 
 import UIKit

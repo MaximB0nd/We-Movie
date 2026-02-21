@@ -2,7 +2,7 @@
 //  OnboardingPageVC.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
@@ -15,7 +15,7 @@ class OnboardingPageVC: BaseVC {
     let pageIndex: Int
     let totalPages: Int
     
-    // UI элементы
+    // UI elements
     private let circleIconView: CircleIconView = {
         let view = CircleIconView()
         view.translatesAutoresizingMaskIntoConstraints = false

@@ -5,8 +5,8 @@
 
 import Foundation
 
-/// Сервис чатов: список, создание приватного/группового, удаление, добавление/удаление участников.
-/// Все запросы идут с Bearer-токеном через APIClient.
+/// Chat service: list, create private/group, delete, add/remove members.
+/// All requests go with Bearer token via APIClient.
 final class ChatService: Sendable {
 
     static let shared = ChatService()
@@ -18,7 +18,7 @@ final class ChatService: Sendable {
 
     // MARK: - Chats list
 
-    /// Получить все чаты текущего пользователя. Сортировка по LastActivityAt DESC.
+    /// Get all chats for current user. Sorted by LastActivityAt DESC.
     func getChats() async throws -> [Chat] {
         let data = try await client.get(path: "api/chat/chats")
         return try client.decode([Chat].self, from: data)
@@ -26,8 +26,8 @@ final class ChatService: Sendable {
 
     // MARK: - Create private chat
 
-    /// Создать приватный чат 1:1. Если чат уже есть — вернётся его ID.
-    /// - Returns: ID нового или существующего чата
+    /// Create private 1:1 chat. If chat exists — returns its ID.
+    /// - Returns: ID of new or existing chat
     func createPrivateChat(otherUserId: Int) async throws -> Int {
         let body = CreatePrivateChatRequest(otherUserId: otherUserId)
         let data = try await client.post(path: "api/chat/private", body: body)
@@ -36,8 +36,8 @@ final class ChatService: Sendable {
 
     // MARK: - Create group chat
 
-    /// Создать групповой чат. Создатель добавляется как админ автоматически.
-    /// - Returns: ID нового чата
+    /// Create group chat. Creator is added as admin automatically.
+    /// - Returns: ID of new chat
     func createGroupChat(name: String, initialMemberIds: [Int]) async throws -> Int {
         let body = CreateGroupChatRequest(name: name, initialMemberIds: initialMemberIds)
         let data = try await client.post(path: "api/chat/group", body: body)
@@ -46,14 +46,14 @@ final class ChatService: Sendable {
 
     // MARK: - Delete chat
 
-    /// Удалить чат. Только админ может удалить.
+    /// Delete chat. Only admin can delete.
     func deleteChat(chatId: Int) async throws {
         _ = try await client.delete(path: "api/chat/\(chatId)")
     }
 
     // MARK: - Add member (group)
 
-    /// Добавить участника в групповой чат. Только админ.
+    /// Add member to group chat. Admin only.
     func addMember(chatId: Int, userId: Int) async throws {
         let body = AddRemoveMemberRequest(userId: userId)
         _ = try await client.put(path: "api/chat/\(chatId)/add-member", body: body)
@@ -61,7 +61,7 @@ final class ChatService: Sendable {
 
     // MARK: - Remove member (group)
 
-    /// Удалить участника из группового чата. Только админ.
+    /// Remove member from group chat. Admin only.
     func removeMember(chatId: Int, userId: Int) async throws {
         let body = AddRemoveMemberRequest(userId: userId)
         _ = try await client.put(path: "api/chat/\(chatId)/remove-member", body: body)
@@ -70,7 +70,7 @@ final class ChatService: Sendable {
     // MARK: - Helpers
 
     private func decodeInt(from data: Data) throws -> Int {
-        // Сервер возвращает просто число: 1 или 3
+        // Server returns plain number: 1 or 3
         if let int = try? JSONDecoder().decode(Int.self, from: data) {
             return int
         }

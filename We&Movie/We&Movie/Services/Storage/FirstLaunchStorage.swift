@@ -2,12 +2,12 @@
 //  FirstLaunchStorage.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 9/2/26.
+//  Created by Maxim Bondarev on 9/2/26.
 //
 
 import Foundation
 
-/// Хранит факт первого запуска/прохождения онбординга.
+/// Stores the fact of first launch/onboarding completion.
 final class FirstLaunchStorage: Sendable {
 
     static let shared = FirstLaunchStorage()

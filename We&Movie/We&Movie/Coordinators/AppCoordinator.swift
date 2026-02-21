@@ -2,7 +2,7 @@
 //  AppCoordinator.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
@@ -41,7 +41,7 @@ class AppCoordinator: Coordinator {
     }
     
     func finish() {
-        // Очистка при необходимости
+        // Cleanup if needed
     }
     
     func showOnboardingFlow(

@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// Ответ успешной регистрации (200 OK)
+/// Successful registration response (200 OK)
 struct RegisterResponse: Codable, Sendable {
     let nickname: String?
     let email: String

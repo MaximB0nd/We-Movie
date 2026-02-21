@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// Участник чата в списке
+/// Chat member in list
 struct ChatMember: Codable, Sendable {
     let id: Int
     let nickname: String

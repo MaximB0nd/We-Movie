@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// Единая точка сетевых запросов: добавляет Bearer, обрабатывает 401 с refresh и повтором запроса.
+/// Single point for network requests: adds Bearer token, handles 401 with refresh and request retry.
 final class APIClient: Sendable {
 
     static let shared = APIClient()
@@ -26,7 +26,7 @@ final class APIClient: Sendable {
 
     // MARK: - Request with optional auth
 
-    /// Выполняет запрос. Если нужен токен — подставляет Bearer. При 401 пробует refresh и повторяет один раз.
+    /// Performs a request. Adds Bearer token if needed. On 401, tries refresh and retries once.
     func data(
         for request: URLRequest,
         requireAuth: Bool = true
@@ -36,7 +36,7 @@ final class APIClient: Sendable {
         let http = response as? HTTPURLResponse
 
         if http?.statusCode == 401, requireAuth {
-            // Пробуем обновить токены и повторить запрос один раз
+            // Try to refresh tokens and retry the request once
             let refreshed = await refreshTokens()
             if refreshed {
                 req = addAuthIfNeeded(request, requireAuth: true)
@@ -50,7 +50,7 @@ final class APIClient: Sendable {
         return data
     }
 
-    /// GET с путём (относительно base). requireAuth: false для register/login/refresh.
+    /// GET with path (relative to base). requireAuth: false for register/login/refresh.
     func get(path: String, requireAuth: Bool = true) async throws -> Data {
         var request = URLRequest(url: APIConfig.url(path: path))
         request.httpMethod = "GET"
@@ -58,7 +58,7 @@ final class APIClient: Sendable {
         return try await data(for: request, requireAuth: requireAuth)
     }
 
-    /// POST с JSON body
+    /// POST with JSON body
     func post<Body: Encodable>(
         path: String,
         body: Body,
@@ -72,7 +72,7 @@ final class APIClient: Sendable {
         return try await data(for: request, requireAuth: requireAuth)
     }
 
-    /// POST без body (если понадобится)
+    /// POST without body (if needed)
     func post(path: String, requireAuth: Bool = true) async throws -> Data {
         var request = URLRequest(url: APIConfig.url(path: path))
         request.httpMethod = "POST"
@@ -81,7 +81,7 @@ final class APIClient: Sendable {
         return try await data(for: request, requireAuth: requireAuth)
     }
 
-    /// PUT с JSON body
+    /// PUT with JSON body
     func put<Body: Encodable>(
         path: String,
         body: Body,
@@ -119,7 +119,7 @@ final class APIClient: Sendable {
         return req
     }
 
-    /// Вызывает POST /api/auth/refresh и сохраняет новые токены. Возвращает true при успехе.
+    /// Calls POST /api/auth/refresh and saves new tokens. Returns true on success.
     private func refreshTokens() async -> Bool {
         guard let refreshToken = tokenStorage.getRefreshToken(), !refreshToken.isEmpty else {
             return false

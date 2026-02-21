@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// Сервис авторизации: логин, обновление токенов, выход.
+/// Auth service: login, token refresh, logout.
 final class LoginService: Sendable {
 
     static let shared = LoginService()
@@ -25,7 +25,7 @@ final class LoginService: Sendable {
 
     // MARK: - Login
 
-    /// Логин по email или никнейму. Сохраняет токены в Keychain и возвращает пользователя + данные для UI.
+    /// Login by email or nickname. Saves tokens to Keychain and returns user + UI data.
     func login(emailOrNickname: String, password: String) async throws -> LoginResponse {
         let body: LoginRequest
         if emailOrNickname.contains("@") && emailOrNickname.contains(".") {
@@ -39,9 +39,9 @@ final class LoginService: Sendable {
         return response
     }
 
-    // MARK: - Refresh (вызывается APIClient автоматически при 401, но можно и вручную)
+    // MARK: - Refresh (called by APIClient automatically on 401, but can be called manually)
 
-    /// Обновить токены по refreshToken. Обычно не нужен из UI — APIClient делает сам при 401.
+    /// Refresh tokens using refreshToken. Usually not needed from UI — APIClient does it automatically on 401.
     func refresh() async throws -> RefreshResponse {
         guard let refreshToken = tokenStorage.getRefreshToken() else {
             throw APIError.unauthorized("Нет refresh token")
@@ -53,8 +53,8 @@ final class LoginService: Sendable {
         return response
     }
 
-    /// Проверяет валидность access-токена и при необходимости обновляет.
-    /// Возвращает true, если сессия валидна и можно продолжать.
+    /// Validates access token and refreshes if needed.
+    /// Returns true if session is valid and can continue.
     func ensureValidSession() async -> Bool {
         guard isLoggedIn else { return false }
         if !tokenStorage.shouldRefreshAccessToken { return true }
@@ -69,17 +69,17 @@ final class LoginService: Sendable {
 
     // MARK: - Logout
 
-    /// Выход: удаляет токены. После этого перенаправить на экран логина.
+    /// Logout: removes tokens. After this, redirect to login screen.
     func logout() {
         tokenStorage.clearAll()
     }
 
-    /// Залогинен ли пользователь (есть refresh token).
+    /// Whether the user is logged in (has refresh token).
     var isLoggedIn: Bool {
         tokenStorage.hasSession
     }
 
-    /// Текущий access token (для отладки или если понадобится в UI).
+    /// Current access token (for debugging or if needed in UI).
     var accessToken: String? {
         tokenStorage.getAccessToken()
     }

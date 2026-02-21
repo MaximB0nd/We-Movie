@@ -2,7 +2,7 @@
 //  UINavigationController+Transition.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
@@ -10,12 +10,12 @@ import QuartzCore
 
 extension UINavigationController {
 
-    /// Устанавливает массив контроллеров с кастомной анимацией перехода
+    /// Sets array of controllers with custom transition animation
     /// - Parameters:
-    ///   - viewControllers: Массив контроллеров для установки
-    ///   - transitionType: Тип анимации (moveIn, fade, push)
-    ///   - direction: Направление перехода (.fromLeft, .fromRight и т.д.)
-    ///   - duration: Длительность анимации (по умолчанию 0.35)
+    ///   - viewControllers: Array of controllers to set
+    ///   - transitionType: Animation type (moveIn, fade, push)
+    ///   - direction: Transition direction (.fromLeft, .fromRight, etc.)
+    ///   - duration: Animation duration (default 0.35)
     func setViewControllers(
         _ viewControllers: [UIViewController],
         transitionType: CATransitionType = .fade,
@@ -26,12 +26,12 @@ extension UINavigationController {
         setViewControllers(viewControllers, animated: false)
     }
 
-    /// Добавляет контроллер в стек с кастомной анимацией перехода
+    /// Adds controller to stack with custom transition animation
     /// - Parameters:
-    ///   - viewController: Контроллер для добавления
-    ///   - transitionType: Тип анимации
-    ///   - direction: Направление перехода
-    ///   - duration: Длительность анимации
+    ///   - viewController: Controller to add
+    ///   - transitionType: Animation type
+    ///   - direction: Transition direction
+    ///   - duration: Animation duration
     func pushViewController(
         _ viewController: UIViewController,
         transitionType: CATransitionType = .fade,

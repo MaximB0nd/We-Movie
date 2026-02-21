@@ -5,7 +5,7 @@
 
 import UIKit
 
-/// Единая точка показа ошибок/сообщений через алерт.
+/// Single point for showing errors/messages via alert.
 final class AlertProvider {
 
     static let shared = AlertProvider()

@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// Сервис регистрации: создание нового пользователя.
+/// Registration service: creates new user.
 final class RegisterService: Sendable {
 
     static let shared = RegisterService()
@@ -15,7 +15,7 @@ final class RegisterService: Sendable {
         self.client = client
     }
 
-    /// Регистрация. При успехе возвращает данные пользователя.
+    /// Registration. Returns user data on success.
     func register(
         name: String,
         nickname: String?,

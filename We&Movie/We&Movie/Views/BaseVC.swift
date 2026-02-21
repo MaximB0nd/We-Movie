@@ -2,7 +2,7 @@
 //  BaseVC.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
@@ -19,11 +19,11 @@ class BaseVC: UIViewController {
 
     func setupUI() {
         view.backgroundColor = .systemBackground
-        // Переопределить в дочерних классах
+        // Override in subclasses
     }
     
     func setupConstraints() {
-        // Переопределить в дочерних классах
+        // Override in subclasses
     }
 
     func showError(_ error: Error) {
@@ -34,7 +34,7 @@ class BaseVC: UIViewController {
         AlertProvider.shared.show(message: message, title: title, on: self)
     }
 
-    // Переопределить в дочерних классах, если нужно отслеживать другие трейты
+    // Override in subclasses if you need to observe other traits
     func setupTraitChangeObservation() {
         registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
             [weak self] (traitEnvironment: Self, previousTraits: UITraitCollection) in
@@ -42,19 +42,19 @@ class BaseVC: UIViewController {
             let previousStyle = previousTraits.userInterfaceStyle
             let currentStyle = traitEnvironment.traitCollection.userInterfaceStyle
 
-            // Проверяем, изменилась ли тема
+            // Check if theme has changed
             if previousStyle != currentStyle {
                self?.handleThemeChangeIfNeeded(previousStyle: previousStyle)
             }
         }
     }
     
-    // Переопределить в дочерних классах для светлой темы
+    // Override in subclasses for light theme
     func applyLightTheme() {
         view.backgroundColor = .accentWhite
     }
 
-    // Переопределить в дочерних классах для темной темы
+    // Override in subclasses for dark theme
     func applyDarkTheme() {
         view.backgroundColor = .accentBlue
     }

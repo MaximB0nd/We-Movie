@@ -5,10 +5,10 @@
 
 import Foundation
 
-/// Запрос регистрации: POST /api/auth/register
+/// Registration request: POST /api/auth/register
 struct RegisterRequest: Codable, Sendable {
-    let name: String       // мин. 2 символа
-    let nickname: String?  // опционально
-    let email: String      // валидный email
-    let password: String   // мин. 6 символов
+    let name: String       // min. 2 characters
+    let nickname: String?  // optional
+    let email: String      // valid email
+    let password: String   // min. 6 characters
 }

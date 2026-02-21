@@ -2,7 +2,7 @@
 //  Coordinator.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
@@ -12,10 +12,10 @@ protocol Coordinator: AnyObject {
     var navigationController: UINavigationController { get set }
     var childCoordinators: [Coordinator] { get set }
 
-    /// Запуск координатора с опциональной анимацией перехода.
+    /// Starts the coordinator with optional transition animation.
     /// - Parameters:
-    ///   - transitionType: Тип анимации (fade, moveIn, push и т.д.). nil = без анимации.
-    ///   - direction: Направление перехода (.fromLeft, .fromRight и т.д.)
+    ///   - transitionType: Animation type (fade, moveIn, push, etc.). nil = no animation.
+    ///   - direction: Transition direction (.fromLeft, .fromRight, etc.)
     func start(
         transitionType: CATransitionType?,
         direction: CATransitionSubtype
@@ -51,12 +51,12 @@ extension Coordinator {
         }
     }
     
-    /// Добавляет контроллер в стек навигации с опциональной кастомной анимацией.
+    /// Adds a controller to the navigation stack with optional custom animation.
     /// - Parameters:
-    ///   - viewController: Контроллер для добавления
-    ///   - transitionType: Тип анимации. nil = стандартная push-анимация (animated: true)
-    ///   - direction: Направление перехода
-    ///   - duration: Длительность анимации
+    ///   - viewController: Controller to add
+    ///   - transitionType: Animation type. nil = standard push animation (animated: true)
+    ///   - direction: Transition direction
+    ///   - duration: Animation duration
     func pushViewController(
         _ viewController: UIViewController,
         transitionType: CATransitionType? = nil,

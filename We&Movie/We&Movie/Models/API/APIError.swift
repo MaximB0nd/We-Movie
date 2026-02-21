@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// Ошибки API по документации
+/// API errors per documentation
 @MainActor
 enum APIError: Error, Sendable {
     case invalidURL
@@ -19,7 +19,7 @@ enum APIError: Error, Sendable {
     case conflict(String)
     case unknown(Int, String?)
 
-    /// Сообщение для показа пользователю
+    /// Message to display to user
     var userMessage: String {
         switch self {
         case .unauthorized(let msg): return msg
@@ -35,7 +35,7 @@ enum APIError: Error, Sendable {
     }
 }
 
-/// Ответ с ошибкой от сервера: { "error": "..." }
+/// Error response from server: { "error": "..." }
 struct APIErrorResponse: Codable {
     let error: String
 }

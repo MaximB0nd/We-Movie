@@ -2,7 +2,7 @@
 //  CustomPageControl.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
@@ -59,14 +59,14 @@ class CustomPageControl: UIView {
     }
     
     private func setupIndicators() {
-        // Удаляем старые индикаторы
+        // Remove old indicators
         indicators.forEach { $0.removeFromSuperview() }
         indicators.removeAll()
         indicatorConstraints.removeAll()
         
         guard numberOfPages > 0 else { return }
         
-        // Создаем индикаторы для всех страниц
+        // Create indicators for all pages
         for index in 0..<numberOfPages {
             let indicator = UIView()
             indicator.layer.cornerRadius = indicatorSize / 2
@@ -74,7 +74,7 @@ class CustomPageControl: UIView {
             addSubview(indicator)
             indicators.append(indicator)
             
-            // Начальные constraints
+            // Initial constraints
             indicatorConstraints[index] = [
                 indicator.widthAnchor.constraint(equalToConstant: indicatorSize),
                 indicator.heightAnchor.constraint(equalToConstant: indicatorSize),
@@ -93,10 +93,10 @@ class CustomPageControl: UIView {
             }
         }
         
-        // Активируем все constraints
+        // Activate all constraints
         indicatorConstraints.values.forEach { NSLayoutConstraint.activate($0) }
         
-        // Обновляем цвета и текущую страницу
+        // Update colors and current page
         updateIndicatorsColors()
         updateCurrentPage()
     }
@@ -107,17 +107,17 @@ class CustomPageControl: UIView {
         UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut, .allowUserInteraction]) { [weak self] in
             guard let self = self else { return }
             
-            // Обновляем цвета (без анимации для цветов)
+            // Update colors (no animation for colors)
             self.updateIndicatorsColors()
             
-            // Обновляем размеры для всех индикаторов
+            // Update sizes for all indicators
             for (index, indicator) in self.indicators.enumerated() {
                 let isCurrentPage = index == self.currentPage
                 let width = isCurrentPage ? self.currentIndicatorWidth : self.indicatorSize
                 let height = isCurrentPage ? self.currentIndicatorHeight : self.indicatorSize
                 let cornerRadius = isCurrentPage ? self.currentIndicatorHeight / 2 : self.indicatorSize / 2
                 
-                // Обновляем constraints
+                // Update constraints
                 if let widthConstraint = self.indicatorConstraints[index]?.first(where: { $0.firstAttribute == .width }) {
                     widthConstraint.constant = width
                 }
@@ -125,7 +125,7 @@ class CustomPageControl: UIView {
                     heightConstraint.constant = height
                 }
                 
-                // Обновляем внешний вид
+                // Update appearance
                 indicator.layer.cornerRadius = cornerRadius
             }
             
@@ -135,13 +135,13 @@ class CustomPageControl: UIView {
     
     private func updateIndicatorsColors() {
         for (index, indicator) in indicators.enumerated() {
-            // Пройденные страницы (индекс меньше текущей) - pageIndicatorTintColor
-            // Текущая и непройденные (индекс >= текущей) - currentPageIndicatorTintColor
+            // Completed pages (index < current) - pageIndicatorTintColor
+            // Current and incomplete (index >= current) - currentPageIndicatorTintColor
             if index < currentPage {
-                // Пройденная страница
+                // Completed page
                 indicator.backgroundColor = pageIndicatorTintColor
             } else {
-                // Текущая или непройденная страница
+                // Current or incomplete page
                 indicator.backgroundColor = currentPageIndicatorTintColor
             }
         }
@@ -152,10 +152,10 @@ class CustomPageControl: UIView {
             return CGSize(width: 0, height: currentIndicatorHeight)
         }
         
-        // Рассчитываем ширину с учетом вытянутого индикатора
+        // Calculate width including elongated indicator
         let totalWidth = CGFloat(numberOfPages) * indicatorSize
             + CGFloat(numberOfPages - 1) * spacing
-            + (currentIndicatorWidth - indicatorSize) // Добавляем разницу для вытянутого индикатора
+            + (currentIndicatorWidth - indicatorSize) // Add difference for elongated indicator
         
         let height = max(indicatorSize, currentIndicatorHeight)
         return CGSize(width: totalWidth, height: height)

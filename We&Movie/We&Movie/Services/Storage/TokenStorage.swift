@@ -6,9 +6,9 @@
 import Foundation
 import Security
 
-/// Безопасное хранение access/refresh токенов в Keychain.
-/// Рекомендуется: accessToken — UserDefaults/память, refreshToken — Keychain (документация).
-/// Здесь оба в Keychain для единообразия и сохранения при перезапуске.
+/// Secure storage of access/refresh tokens in Keychain.
+/// Recommended: accessToken — UserDefaults/memory, refreshToken — Keychain (per docs).
+/// Both stored in Keychain here for consistency and persistence across restarts.
 final class TokenStorage: Sendable {
 
     static let shared = TokenStorage()
@@ -48,9 +48,9 @@ final class TokenStorage: Sendable {
         }
     }
 
-    // MARK: - Expiration (для предобновления за 5–10 мин)
+    // MARK: - Expiration (for pre-refresh 5–10 min before expiry)
 
-    /// Время истечения access-токена (Date)
+    /// Access token expiration time (Date)
     var accessTokenExpiresAt: Date? {
         get {
             guard let str = read(key: expiresAtKey),
@@ -66,13 +66,13 @@ final class TokenStorage: Sendable {
         }
     }
 
-    /// Нужно ли обновить токен (истёк или скоро истечёт, например за 5 мин)
+    /// Whether token needs refresh (expired or expiring soon, e.g. within 5 min)
     var shouldRefreshAccessToken: Bool {
         guard let expiresAt = accessTokenExpiresAt else { return true }
         return Date().addingTimeInterval(5 * 60) >= expiresAt
     }
 
-    /// Есть ли сохранённая сессия (можно ли считать пользователя залогиненным)
+    /// Whether there is a saved session (can consider user logged in)
     var hasSession: Bool {
         getRefreshToken() != nil
     }

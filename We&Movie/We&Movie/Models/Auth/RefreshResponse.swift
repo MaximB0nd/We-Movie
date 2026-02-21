@@ -5,5 +5,5 @@
 
 import Foundation
 
-/// Ответ refresh — аналогичен LoginResponse
+/// Refresh response — same as LoginResponse
 typealias RefreshResponse = LoginResponse

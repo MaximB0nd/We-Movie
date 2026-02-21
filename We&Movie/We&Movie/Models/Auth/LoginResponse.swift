@@ -5,10 +5,10 @@
 
 import Foundation
 
-/// Ответ успешного логина (200 OK)
+/// Successful login response (200 OK)
 struct LoginResponse: Codable, Sendable {
     let accessToken: String
     let refreshToken: String
-    let expiresIn: Int  // секунды до истечения access-токена
+    let expiresIn: Int  // seconds until access token expiry
     let user: User
 }
