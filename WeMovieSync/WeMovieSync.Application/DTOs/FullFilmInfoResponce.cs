@@ -12,7 +12,6 @@ namespace WeMovieSync.Application.DTOs
         public long Token { get; set; }
         public string? FilmName { get; set; }
         public string? FilmDescription { get; set; }
-
         public byte[]? Image { get; set; }
         public string? Category { get; set; }
         public TimeSpan? Duration { get; set; }

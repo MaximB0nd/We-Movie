@@ -14,7 +14,7 @@ namespace WeMovieSync.Application.Interfaces
         Task<List<AllFilmsResponce>> GetAllfilms();
 
         // Получение полной информации о выбранном фильме
-        Task<FilmCatalog> GetFilmById(long token);
+        Task<AllFilmsResponce> GetFilmById(long token);
 
         // Проверка что фильм существует
         Task<bool> IsFilmExists(long token);
