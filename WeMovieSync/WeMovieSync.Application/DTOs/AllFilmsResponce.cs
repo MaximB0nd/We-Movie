@@ -9,7 +9,7 @@ namespace WeMovieSync.Application.DTOs
 {
     public class AllFilmsResponce
     {
-        public long FilmId { get; set; }
+        public long  Token { get; set; }
         public long TotalCount { get; set; }
         public string? Name { get; set; }
         public byte[]? Image { get; set; }
