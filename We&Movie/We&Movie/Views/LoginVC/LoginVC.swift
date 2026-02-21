@@ -358,6 +358,39 @@ class LoginVC: BaseVC {
         scrollView.scrollRectToVisible(targetRect, animated: true)
     }
 
+    override func applyLightTheme() {
+        super.applyLightTheme()
+        subtitleLabel.textColor = .accentBlueMuted
+        loginTitleLabel.textColor = .accentBlue
+        passwordTitleLabel.textColor = .accentBlue
+        loginTextField.backgroundColor = .accentWhite
+        loginTextField.textColor = .accentBlue
+        loginTextField.layer.borderColor = UIColor.accentBlueMuted.cgColor
+        passwordTextField.backgroundColor = .accentWhite
+        passwordTextField.textColor = .accentBlue
+        passwordTextField.layer.borderColor = UIColor.accentBlueMuted.cgColor
+        loginButton.backgroundColor = .accentBlue
+        loginButton.setTitleColor(.accentWhite, for: .normal)
+        registerButton.setTitleColor(.accentBlue, for: .normal)
+        (passwordTextField.rightView?.subviews.first as? UIButton)?.tintColor = .accentBlue
+    }
+
+    override func applyDarkTheme() {
+        super.applyDarkTheme()
+        subtitleLabel.textColor = .accentWhite
+        loginTitleLabel.textColor = .accentWhite
+        passwordTitleLabel.textColor = .accentWhite
+        loginTextField.backgroundColor = .accentWhite.withAlphaComponent(0.15)
+        loginTextField.textColor = .accentWhite
+        loginTextField.layer.borderColor = UIColor.accentWhite.withAlphaComponent(0.4).cgColor
+        passwordTextField.backgroundColor = .accentWhite.withAlphaComponent(0.15)
+        passwordTextField.textColor = .accentWhite
+        passwordTextField.layer.borderColor = UIColor.accentWhite.withAlphaComponent(0.4).cgColor
+        loginButton.backgroundColor = .accentWhite
+        loginButton.setTitleColor(.accentBlue, for: .normal)
+        registerButton.setTitleColor(.accentWhite, for: .normal)
+        (passwordTextField.rightView?.subviews.first as? UIButton)?.tintColor = .accentWhite
+    }
 }
 
 // MARK: - UITextFieldDelegate

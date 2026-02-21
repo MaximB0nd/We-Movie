@@ -439,6 +439,49 @@ class RegisterVC: BaseVC {
         scrollView.scrollRectToVisible(targetRect, animated: true)
     }
 
+    override func applyLightTheme() {
+        super.applyLightTheme()
+        subtitleLabel.textColor = .accentBlueMuted
+        nameTitleLabel.textColor = .accentBlue
+        emailTitleLabel.textColor = .accentBlue
+        nicknameTitleLabel.textColor = .accentBlue
+        passwordTitleLabel.textColor = .accentBlue
+        applyLightThemeToTextFields()
+        registerButton.backgroundColor = .accentBlue
+        registerButton.setTitleColor(.accentWhite, for: .normal)
+        loginButton.setTitleColor(.accentBlue, for: .normal)
+        (passwordTextField.rightView?.subviews.first as? UIButton)?.tintColor = .accentBlue
+    }
+
+    override func applyDarkTheme() {
+        super.applyDarkTheme()
+        subtitleLabel.textColor = .accentWhite
+        nameTitleLabel.textColor = .accentWhite
+        emailTitleLabel.textColor = .accentWhite
+        nicknameTitleLabel.textColor = .accentWhite
+        passwordTitleLabel.textColor = .accentWhite
+        applyDarkThemeToTextFields()
+        registerButton.backgroundColor = .accentWhite
+        registerButton.setTitleColor(.accentBlue, for: .normal)
+        loginButton.setTitleColor(.accentWhite, for: .normal)
+        (passwordTextField.rightView?.subviews.first as? UIButton)?.tintColor = .accentWhite
+    }
+
+    private func applyLightThemeToTextFields() {
+        [nameTextField, emailTextField, nicknameTextField, passwordTextField].forEach { field in
+            field.backgroundColor = .accentWhite
+            field.textColor = .accentBlue
+            field.layer.borderColor = UIColor.accentBlueMuted.cgColor
+        }
+    }
+
+    private func applyDarkThemeToTextFields() {
+        [nameTextField, emailTextField, nicknameTextField, passwordTextField].forEach { field in
+            field.backgroundColor = .accentWhite.withAlphaComponent(0.15)
+            field.textColor = .accentWhite
+            field.layer.borderColor = UIColor.accentWhite.withAlphaComponent(0.4).cgColor
+        }
+    }
 }
 
 // MARK: - UITextFieldDelegate
