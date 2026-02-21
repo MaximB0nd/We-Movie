@@ -35,3 +35,12 @@ fastlane/test_output
 
 Codes.txt
 *.txt
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.sln.docstates
+bin/
+obj/
+*.env
