@@ -49,17 +49,9 @@ class RegisterVC: BaseVC {
         return label
     }()
 
-    private let nameTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Имя"
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.textColor = .accentBlue
-        return label
-    }()
-
     private let nameTextField: UITextField = {
         let field = UITextField()
-        field.placeholder = "Введите имя"
+        field.placeholder = "Имя"
         field.font = .systemFont(ofSize: 16, weight: .regular)
         field.backgroundColor = .accentWhite
         field.layer.cornerRadius = 24
@@ -69,14 +61,6 @@ class RegisterVC: BaseVC {
         field.layer.borderWidth = 2
         field.layer.borderColor = UIColor.accentBlueMuted.cgColor
         return field
-    }()
-
-    private let emailTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Email"
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.textColor = .accentBlue
-        return label
     }()
 
     private let emailTextField: UITextField = {
@@ -95,14 +79,6 @@ class RegisterVC: BaseVC {
         return field
     }()
 
-    private let nicknameTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Никнейм"
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.textColor = .accentBlue
-        return label
-    }()
-
     private let nicknameTextField: UITextField = {
         let field = UITextField()
         field.placeholder = "Никнейм"
@@ -115,14 +91,6 @@ class RegisterVC: BaseVC {
         field.layer.borderWidth = 2
         field.layer.borderColor = UIColor.accentBlueMuted.cgColor
         return field
-    }()
-
-    private let passwordTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Пароль"
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.textColor = .accentBlue
-        return label
     }()
 
     private let passwordTextField: UITextField = {
@@ -160,36 +128,8 @@ class RegisterVC: BaseVC {
         return button
     }()
 
-    private lazy var nameFieldStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [nameTitleLabel, nameTextField])
-        stack.axis = .vertical
-        stack.spacing = 6
-        return stack
-    }()
-
-    private lazy var emailFieldStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [emailTitleLabel, emailTextField])
-        stack.axis = .vertical
-        stack.spacing = 6
-        return stack
-    }()
-
-    private lazy var nicknameFieldStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [nicknameTitleLabel, nicknameTextField])
-        stack.axis = .vertical
-        stack.spacing = 6
-        return stack
-    }()
-
-    private lazy var passwordFieldStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [passwordTitleLabel, passwordTextField])
-        stack.axis = .vertical
-        stack.spacing = 6
-        return stack
-    }()
-
     private lazy var formStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [nameFieldStack, emailFieldStack, nicknameFieldStack, passwordFieldStack])
+        let stack = UIStackView(arrangedSubviews: [nameTextField, emailTextField, nicknameTextField, passwordTextField])
         stack.axis = .vertical
         stack.spacing = 12
         return stack
@@ -442,10 +382,6 @@ class RegisterVC: BaseVC {
     override func applyLightTheme() {
         super.applyLightTheme()
         subtitleLabel.textColor = .accentBlueMuted
-        nameTitleLabel.textColor = .accentBlue
-        emailTitleLabel.textColor = .accentBlue
-        nicknameTitleLabel.textColor = .accentBlue
-        passwordTitleLabel.textColor = .accentBlue
         applyLightThemeToTextFields()
         registerButton.backgroundColor = .accentBlue
         registerButton.setTitleColor(.accentWhite, for: .normal)
@@ -456,10 +392,6 @@ class RegisterVC: BaseVC {
     override func applyDarkTheme() {
         super.applyDarkTheme()
         subtitleLabel.textColor = .accentWhite
-        nameTitleLabel.textColor = .accentWhite
-        emailTitleLabel.textColor = .accentWhite
-        nicknameTitleLabel.textColor = .accentWhite
-        passwordTitleLabel.textColor = .accentWhite
         applyDarkThemeToTextFields()
         registerButton.backgroundColor = .accentWhite
         registerButton.setTitleColor(.accentBlue, for: .normal)

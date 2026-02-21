@@ -49,14 +49,6 @@ class LoginVC: BaseVC {
         return label
     }()
     
-    private let loginTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Email / Никнейм"
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.textColor = .accentBlue
-        return label
-    }()
-
     private let loginTextField: UITextField = {
         let field = UITextField()
         field.placeholder = "Email или никнейм"
@@ -70,14 +62,6 @@ class LoginVC: BaseVC {
         field.layer.borderWidth = 2
         field.layer.borderColor = UIColor.accentBlueMuted.cgColor
         return field
-    }()
-
-    private let passwordTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Пароль"
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.textColor = .accentBlue
-        return label
     }()
 
     private let passwordTextField: UITextField = {
@@ -115,22 +99,8 @@ class LoginVC: BaseVC {
         return button
     }()
 
-    private lazy var loginFieldStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [loginTitleLabel, loginTextField])
-        stack.axis = .vertical
-        stack.spacing = 6
-        return stack
-    }()
-
-    private lazy var passwordFieldStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [passwordTitleLabel, passwordTextField])
-        stack.axis = .vertical
-        stack.spacing = 6
-        return stack
-    }()
-
     private lazy var formStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [loginFieldStack, passwordFieldStack])
+        let stack = UIStackView(arrangedSubviews: [loginTextField, passwordTextField])
         stack.axis = .vertical
         stack.spacing = 12
         return stack
@@ -361,8 +331,6 @@ class LoginVC: BaseVC {
     override func applyLightTheme() {
         super.applyLightTheme()
         subtitleLabel.textColor = .accentBlueMuted
-        loginTitleLabel.textColor = .accentBlue
-        passwordTitleLabel.textColor = .accentBlue
         loginTextField.backgroundColor = .accentWhite
         loginTextField.textColor = .accentBlue
         loginTextField.layer.borderColor = UIColor.accentBlueMuted.cgColor
@@ -378,8 +346,6 @@ class LoginVC: BaseVC {
     override func applyDarkTheme() {
         super.applyDarkTheme()
         subtitleLabel.textColor = .accentWhite
-        loginTitleLabel.textColor = .accentWhite
-        passwordTitleLabel.textColor = .accentWhite
         loginTextField.backgroundColor = .accentWhite.withAlphaComponent(0.15)
         loginTextField.textColor = .accentWhite
         loginTextField.layer.borderColor = UIColor.accentWhite.withAlphaComponent(0.4).cgColor
