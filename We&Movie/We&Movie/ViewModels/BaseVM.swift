@@ -2,12 +2,12 @@
 //  BaseVM.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import Foundation
 
 class BaseVM {
-    // Базовый класс для всех VM
-    // Можно добавить общую логику, например, обработку ошибок
+    // Base class for all VMs
+    // Can add common logic, e.g. error handling
 }

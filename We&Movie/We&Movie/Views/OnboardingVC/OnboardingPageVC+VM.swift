@@ -2,13 +2,13 @@
 //  OnboardingPageVC+VM.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import Foundation
 
 extension OnboardingPageVC {
     class VM: BaseVM {
-        // Бизнес-логика для OnboardingPageVC
+        // Business logic for OnboardingPageVC
     }
 }

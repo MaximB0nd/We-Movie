@@ -2,10 +2,11 @@
 //  AuthCoordinator.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
+import QuartzCore
 
 class AuthCoordinator: Coordinator {
     var navigationController: UINavigationController
@@ -17,9 +18,13 @@ class AuthCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    func start() {
-        let viewController = AuthVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: true)
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
+        navigationController.setNavigationBarHidden(true, animated: false)
+        let viewController = LoginVC(coordinator: self)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {
@@ -27,7 +32,26 @@ class AuthCoordinator: Coordinator {
     }
     
     func showMainTabBar() {
-        parentCoordinator?.showMainTabBarFlow()
+        parentCoordinator?.showMainTabBarFlow(
+            transitionType: .reveal,
+            direction: .fromRight
+        )
         finish()
+    }
+
+    func showLogin(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
+        let viewController = LoginVC(coordinator: self)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
+    }
+
+    func showRegister(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
+        let viewController = RegisterVC(coordinator: self)
+        pushViewController(viewController, transitionType: transitionType, direction: direction)
     }
 }

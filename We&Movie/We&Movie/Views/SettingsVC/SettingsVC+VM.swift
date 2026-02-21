@@ -2,13 +2,13 @@
 //  SettingsVC+VM.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import Foundation
 
 extension SettingsVC {
     class VM: BaseVM {
-        // Бизнес-логика для SettingsVC
+        // Business logic for SettingsVC
     }
 }

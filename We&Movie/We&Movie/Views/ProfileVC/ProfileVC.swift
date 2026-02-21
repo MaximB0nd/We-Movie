@@ -2,7 +2,7 @@
 //  ProfileVC.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
@@ -20,6 +20,17 @@ class ProfileVC: BaseVC {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
+    private let logoutButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Выйти из аккаунта", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        button.backgroundColor = .systemRed
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 22
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     init(coordinator: ProfileCoordinator) {
         self.viewModel = VM()
@@ -34,6 +45,8 @@ class ProfileVC: BaseVC {
     override func setupUI() {
         super.setupUI()
         view.addSubview(titleLabel)
+        view.addSubview(logoutButton)
+        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
     }
     
     override func setupConstraints() {
@@ -41,7 +54,17 @@ class ProfileVC: BaseVC {
         
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+
+            logoutButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
+            logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoutButton.heightAnchor.constraint(equalToConstant: 44),
+            logoutButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 200)
         ])
+    }
+
+    @objc private func logoutTapped() {
+        viewModel.logout()
+        coordinator?.showAuth()
     }
 }

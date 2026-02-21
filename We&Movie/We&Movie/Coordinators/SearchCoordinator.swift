@@ -2,10 +2,11 @@
 //  SearchCoordinator.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
+import QuartzCore
 
 class SearchCoordinator: Coordinator {
     var navigationController: UINavigationController
@@ -15,12 +16,15 @@ class SearchCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let viewController = SearchVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: false)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {
-        // Очистка при необходимости
+        // Cleanup if needed
     }
 }

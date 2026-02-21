@@ -2,25 +2,35 @@
 //  ProfileCoordinator.swift
 //  We&Movie
 //
-//  Created by Максим Бондарев on 16/1/26.
+//  Created by Maxim Bondarev on 16/1/26.
 //
 
 import UIKit
+import QuartzCore
 
 class ProfileCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     
+    weak var parentCoordinator: MainTabBarCoordinator?
+    
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
     
-    func start() {
+    func start(
+        transitionType: CATransitionType? = nil,
+        direction: CATransitionSubtype = .fromRight
+    ) {
         let viewController = ProfileVC(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: false)
+        setViewControllers([viewController], transitionType: transitionType, direction: direction)
     }
     
     func finish() {
-        // Очистка при необходимости
+        // Cleanup if needed
+    }
+
+    func showAuth() {
+        parentCoordinator?.showAuthFlow()
     }
 }
