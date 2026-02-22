@@ -8,6 +8,8 @@
     using WeMovieSync.Application.Interfaces;
     using WeMovieSync.Infrastructure.Context;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using WeMovieSync.Application.Errors;
+using ErrorOr;
 
     namespace WeMovieSync.Infrastructure.Repositories
     {
@@ -23,31 +25,68 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
             // Getting all films with totalcount
             public async Task<FilmsResponce> GetAllFilms()
             {
-            var query = _context.FilmCatalog
-                .AsNoTracking()
-                .AsQueryable();
+                var query = _context.FilmCatalog
+                    .AsNoTracking()
+                    .AsQueryable();
 
-            var totalCount = await query.CountAsync();
+                var totalCount = await query.CountAsync();
 
-            var films = await query
-                 .Select(f => new AllFilmsResponce
-                 {
-                    Token = f.Token,
-                    Name = f.FilmName,
-                    Image = f.Image
-                 })
-                 .ToListAsync();
+                var films = await query
+                     .Select(f => new AllFilmsResponce
+                     {
+                        Token = f.Token,
+                        Name = f.FilmName,
+                        Image = f.Image
+                     })
+                     .ToListAsync();
 
-            return new FilmsResponce
+                return new FilmsResponce
+                {
+                    Films = films,
+                    TotalCount = totalCount
+                };      
+            }
+
+            // Checking existince of film
+            public async Task<bool> IsFilmExists(long token)
             {
-                Films = films,
-                TotalCount = totalCount
-            };      
-        }
+                return await _context.FilmCatalog
+                    .AnyAsync(f => f.Token == token);
+            }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
+            // Getting full info about film by token
+            public async Task<ErrorOr<FullFilmInfoResponce>> GetFilmById(long token)
+            {   
+                var film = await _context.FilmCatalog
+                    .AsNoTracking()
+                    .Where(f => f.Token == token)
+                    .Select(f => new FullFilmInfoResponce
+                    {
+                        Token = f.Token,
+                        FilmName = f.FilmName,
+                        FilmDescription = f.FilmDescription,
+                        Image = f.Image,
+                        Category = f.Category,
+                        Duration = f.Duration
+                    })
+                    .FirstOrDefaultAsync();
+
+            if (film == null)
+                return FilmCatalogErrors.FilmNotFoundByToken(token);
+
+            return film;
+            }
+        
+            // Checking film existince
+            public async Task<bool> IfFilmExists(long token)
+            {
+                return await _context.FilmCatalog
+                    .AnyAsync(f => f.Token == token);
+            }
+
+            public async Task SaveChangesAsync()
+            {
+                await _context.SaveChangesAsync();
+            }
     }
 }
