@@ -5,7 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using WeMovieSync.Application.Interfaces;
-using WeMovieSync.Application.Services; 
+using WeMovieSync.Application.Services;
+using WeMovieSync.Application.Servives;
 using WeMovieSync.Infrastructure.Context;
 using WeMovieSync.Infrastructure.Repositories;
 
@@ -83,6 +84,8 @@ builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IMsgService, MsgService>();
 builder.Services.AddScoped<IMessagesRepository, MessageRepository>();
+builder.Services.AddScoped<IFilmCatalogRepository, FilmCatalogRepository>();
+builder.Services.AddScoped<IFilmCatalogService, FilmCatalogService>();
 
 var app = builder.Build();
 
