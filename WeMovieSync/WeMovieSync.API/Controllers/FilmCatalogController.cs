@@ -35,7 +35,7 @@ namespace WeMovieSync.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("getfilm=[filmTocken]")]
+        [HttpGet("getfilm={filmTocken}")]
         public async Task<IActionResult> GetAllFilmsAsync(long filmToken)
         {
             try
