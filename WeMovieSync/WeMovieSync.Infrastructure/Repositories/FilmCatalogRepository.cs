@@ -1,19 +1,18 @@
-﻿    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using WeMovieSync.Application.DTOs;
-    using WeMovieSync.Application.Interfaces;
-    using WeMovieSync.Infrastructure.Context;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WeMovieSync.Application.DTOs;
+using WeMovieSync.Application.Interfaces;
+using WeMovieSync.Infrastructure.Context;
 using WeMovieSync.Application.Errors;
 using ErrorOr;
 
-    namespace WeMovieSync.Infrastructure.Repositories
-    {
-        public class FilmCatalogRepository : IFilmCatalogRepository
+namespace WeMovieSync.Infrastructure.Repositories
+{
+    public class FilmCatalogRepository : IFilmCatalogRepository
         {
             private readonly WeMovieSyncContext _context;
 
