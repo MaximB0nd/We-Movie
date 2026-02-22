@@ -16,9 +16,9 @@ namespace WeMovieSync.Infrastructure.Repositories
         {
             private readonly WeMovieSyncContext _context;
 
-            public FilmCatalogRepository( WeMovieSyncContext context )
+            public FilmCatalogRepository(WeMovieSyncContext context )
             {
-                _context = context;
+                _context = context ?? throw new ArgumentNullException(nameof(context));
             }
 
             // Getting all films with totalcount
@@ -46,13 +46,6 @@ namespace WeMovieSync.Infrastructure.Repositories
                 };      
             }
 
-            // Checking existince of film
-            public async Task<bool> IsFilmExists(long token)
-            {
-                return await _context.FilmCatalog
-                    .AnyAsync(f => f.Token == token);
-            }
-
             // Getting full info about film by token
             public async Task<ErrorOr<FullFilmInfoResponce>> GetFilmById(long token)
             {   
@@ -77,7 +70,7 @@ namespace WeMovieSync.Infrastructure.Repositories
             }
         
             // Checking film existince
-            public async Task<bool> IfFilmExists(long token)
+            public async Task<bool> IsFilmExists(long token)
             {
                 return await _context.FilmCatalog
                     .AnyAsync(f => f.Token == token);
