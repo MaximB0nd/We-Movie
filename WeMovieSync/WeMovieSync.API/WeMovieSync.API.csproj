@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\seed-images\begin.jpg" />
+    <Content Remove="wwwroot\seed-images\interstellar.jpg" />
+    <Content Remove="wwwroot\seed-images\matrix.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ErrorOr" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.18" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.17">
@@ -26,6 +32,12 @@
     <ProjectReference Include="..\WeMovieSync.Application\WeMovieSync.Application.csproj" />
     <ProjectReference Include="..\WeMovieSync.Core\WeMovieSync.Core.csproj" />
     <ProjectReference Include="..\WeMovieSync.Infrastructure\WeMovieSync.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\seed-images\begin.jpg" />
+    <None Include="wwwroot\seed-images\interstellar.jpg" />
+    <None Include="wwwroot\seed-images\matrix.jpg" />
   </ItemGroup>
 
 </Project>

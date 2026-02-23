@@ -8,6 +8,7 @@ using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Application.Services;
 using WeMovieSync.Application.Servives;
 using WeMovieSync.Infrastructure.Context;
+using WeMovieSync.Infrastructure.Data;
 using WeMovieSync.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -108,11 +109,12 @@ app.MapControllers();
 
 
 // Migration
-if (app.Environment.IsProduction() )
+if (app.Environment.IsProduction() || app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<WeMovieSyncContext>();
     db.Database.Migrate();  // применяет миграции автоматически при запуске
+    await FilmsSeeder.Initialize(db); // Автоматическое заполнение БД фильмами
 }
 
 app.Run();
