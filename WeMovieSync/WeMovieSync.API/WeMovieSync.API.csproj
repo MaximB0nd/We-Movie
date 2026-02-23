@@ -12,6 +12,13 @@
     <Content Remove="wwwroot\seed-images\matrix.jpg" />
   </ItemGroup>
 
+	<ItemGroup>
+		<!-- Копируем всю папку seed-images в output -->
+		<None Include="wwwroot\seed-images\**\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="ErrorOr" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.18" />
