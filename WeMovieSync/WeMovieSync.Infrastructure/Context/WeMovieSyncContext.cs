@@ -70,7 +70,14 @@ namespace WeMovieSync.Infrastructure.Context
             modelBuilder.Entity<FilmCatalog>()
                 .HasIndex(f => f.Token)
                 .IsUnique();
+
+            modelBuilder.Entity<Chat>()
+            .HasOne(c => c.CurrentFilm)
+            .WithMany()
+            .HasForeignKey(c => c.CurrentFilmId)
+            .OnDelete(DeleteBehavior.SetNull);  // если фильм удалён — комната остаётся
         }
+    }
 
     }
 }
