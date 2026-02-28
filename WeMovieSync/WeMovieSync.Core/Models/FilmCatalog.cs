@@ -22,5 +22,8 @@ namespace WeMovieSync.Core.Models
         public string? Category { get; set; }
         public TimeSpan? Duration { get; set; }
 
+        public String? MediaLink { get; set; }
+
+
     }
 }

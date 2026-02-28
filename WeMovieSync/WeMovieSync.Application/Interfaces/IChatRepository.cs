@@ -4,19 +4,28 @@ namespace WeMovieSync.Application.Interfaces
 {
     public interface IChatRepository
     {
-        // Chats
         Task<Chat?> GetByIdAsync(long chatId);
+        Task<Chat?> GetWatchRoomByIdAsync(long chatId);
+
         Task AddChatAsync(Chat chat);
+        Task UpdateChatAsync(Chat chat);
         Task DeleteChatAsync(long chatId);
-        Task<List<Chat>> GetUserChatsAsync(long userId);
-        Task<Chat> FindPrivateChatBetweenAsync(long userId, long otherId);
 
+        Task<List<Chat>> GetUserRoomsAsync(long userId);
 
+        Task<bool> IsUserInRoomAsync(long userId, long roomId);
 
-        // Members
-        Task<bool> IsUserInChatAsync(long userId, long chatId);
-        Task AddMemberAsync(long chatId, long userId, string role = "member");
-        Task RemoveMemberAsync(long chatId, long userId);
+        Task AddMemberAsync(long roomId, long userId, string role = "member");
+        Task RemoveMemberAsync(long roomId, long userId);
+
+        Task UpdateWatchRoomStateAsync(
+            long roomId,
+            long? filmId,
+            double positionSeconds,
+            bool isPaused,
+            float playbackRate);
+
+        Task SetHostAsync(long roomId, long userId);
 
         Task SaveChangesAsync();
     }

@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WeMovieSync.Application.DTOs;
 using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Infrastructure.Context;
 using WeMovieSync.Application.Errors;
 using ErrorOr;
+using WeMovieSync.Core.Models;
 
 namespace WeMovieSync.Infrastructure.Repositories
 {
@@ -22,7 +18,7 @@ namespace WeMovieSync.Infrastructure.Repositories
             }
 
             // Getting all films with totalcount
-            public async Task<FilmsResponce> GetAllFilms()
+            public async Task<FilmsResponce> GetAllFilmsAsync()
             {
                 var query = _context.FilmCatalog
                     .AsNoTracking()
@@ -46,8 +42,23 @@ namespace WeMovieSync.Infrastructure.Repositories
                 };      
             }
 
+        // Getting object of film
+        public async Task<ErrorOr<FilmCatalog>> GetFilmObjectByIdAsync(long token)
+        {
+            var film = await _context.FilmCatalog
+                .AsNoTracking()
+                .Where(f => f.Token == token)
+                .FirstOrDefaultAsync();
+
+            if (film == null) {
+                return FilmCatalogErrors.FilmNotFoundByToken(token);
+            }
+
+            return film;
+        }
+
             // Getting full info about film by token
-            public async Task<ErrorOr<FullFilmInfoResponce>> GetFilmById(long token)
+            public async Task<ErrorOr<FullFilmInfoResponce>> GetFilmByIdAsync(long token)
             {   
                 var film = await _context.FilmCatalog
                     .AsNoTracking()
@@ -69,16 +80,16 @@ namespace WeMovieSync.Infrastructure.Repositories
             return film;
             }
         
-            // Checking film existince
-            public async Task<bool> IsFilmExists(long token)
-            {
-                return await _context.FilmCatalog
-                    .AnyAsync(f => f.Token == token);
-            }
+        // Checking film existince
+        public async Task<bool> IsFilmExistsAsync(long token)
+        {
+            return await _context.FilmCatalog
+                .AnyAsync(f => f.Token == token);
+        }
 
-            public async Task SaveChangesAsync()
-            {
-                await _context.SaveChangesAsync();
-            }
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

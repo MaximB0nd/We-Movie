@@ -26,7 +26,7 @@ namespace WeMovieSync.Application.Interfaces
         Task<bool> IsMessageExistsAsync(long messageId);
 
         // Получение сообщения по Id
-        Task<Message> GetMsgByIdAsync(long messageId);
+        Task<Message> GetMsgByIdAsync(long? messageId);
 
         // Получение всех непрочитанных сообщений
         Task<List<long>> GetAllUnreadMsgsAsync(long chatId, long userId);

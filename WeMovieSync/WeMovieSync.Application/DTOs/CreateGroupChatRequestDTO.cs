@@ -1,8 +1,9 @@
 ﻿namespace WeMovieSync.Application.DTOs
 {
-    public class CreateGroupChatRequestDTO
+    public class CreateRoomRequestDTO
     {
         public string Name { get; set; } = null!;
-        public List<long> InitialMemberIds { get; set; } = new();
+        public long token { get; set; } 
+        //public List<long> InitialMemberIds { get; set; } = new();
     }
 }

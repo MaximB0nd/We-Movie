@@ -32,7 +32,7 @@ namespace WeMovieSync.Application.Services
         {
             int limit = 20;
 
-            if (!await _chatRepository.IsUserInChatAsync(currentUserId, chatId))
+            if (!await _chatRepository.IsUserInRoomAsync(currentUserId, chatId))
             {
                 return ChatErrors.UserNotInChat;
             }
@@ -63,7 +63,7 @@ namespace WeMovieSync.Application.Services
             }
 
             // Checking access to chat
-            if (!await _chatRepository.IsUserInChatAsync(currentUserId, dto.ChatId))
+            if (!await _chatRepository.IsUserInRoomAsync(currentUserId, dto.ChatId))
             {
                 return ChatErrors.UserNotInChat;
             }
@@ -90,7 +90,7 @@ namespace WeMovieSync.Application.Services
                 return MessagesErrors.MessageNotFound;
             }
 
-            var isInChat = await _chatRepository.IsUserInChatAsync(userId, message.ChatId);
+            var isInChat = await _chatRepository.IsUserInRoomAsync(userId, message.ChatId);
             if (!isInChat)
             {
                 return ChatErrors.UserNotInChat;
@@ -105,7 +105,7 @@ namespace WeMovieSync.Application.Services
         public async Task<ErrorOr<Success>> MarkAllAsReadAsync(long currentUserId, long chatId)
         {
             // Проверка доступа к чату
-            if (!await _chatRepository.IsUserInChatAsync(currentUserId, chatId))
+            if (!await _chatRepository.IsUserInRoomAsync(currentUserId, chatId))
                 return ChatErrors.UserNotInChat;
 
             // Получаем все непрочитанные сообщения
@@ -131,7 +131,7 @@ namespace WeMovieSync.Application.Services
             }
 
             // Проверка доступа к чату
-            if (!await _chatRepository.IsUserInChatAsync(userId, message.ChatId))
+            if (!await _chatRepository.IsUserInRoomAsync(userId, message.ChatId))
             {
                 return ChatErrors.UserNotInChat;
             }

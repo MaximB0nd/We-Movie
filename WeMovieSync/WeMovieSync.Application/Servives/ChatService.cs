@@ -9,192 +9,299 @@ namespace WeMovieSync.Application.Services
     public class ChatService : IChatService
     {
         private readonly IChatRepository _chatRepository;
-        private readonly IUserRepository _userRepository; 
+        private readonly IUserRepository _userRepository;
+        private readonly IFilmCatalogRepository _filmCatalogRepository;
 
-        public ChatService(IChatRepository chatRepository, IUserRepository userRepository)
+        public ChatService(
+            IChatRepository chatRepository,
+            IUserRepository userRepository,
+            IFilmCatalogRepository filmCatalogRepository)
         {
             _chatRepository = chatRepository;
             _userRepository = userRepository;
+            _filmCatalogRepository = filmCatalogRepository;
         }
 
+        // Получить список комнат текущего пользователя
         public async Task<ErrorOr<List<ChatPreviewDto>>> GetUserChatsAsync(long currentUserId)
         {
-            var chats = await _chatRepository.GetUserChatsAsync(currentUserId);
+            var rooms = await _chatRepository.GetUserRoomsAsync(currentUserId);
 
-            var dtos = chats.Select(c => new ChatPreviewDto
+            var dtos = rooms.Select(r => new ChatPreviewDto
             {
-                Id = c.Id,
-                IsGroup = c.IsGroup,
-                Name = c.IsGroup ? c.Name : null,
-
-                // Последнее сообщение (берём самое новое)
-                LastMessagePreview = c.Messages?
+                Id = r.Id,
+                Name = r.Name,
+                LastMessagePreview = r.Messages?
                     .OrderByDescending(m => m.SentAt)
                     .FirstOrDefault()?
                     .Text?
-                    .Substring(0, Math.Min(100, c.Messages.FirstOrDefault()?.Text?.Length ?? 0)),
-
-                LastMessageTime = c.Messages?
+                    .Substring(0, Math.Min(100, r.Messages.FirstOrDefault()?.Text?.Length ?? 0)),
+                LastMessageTime = r.Messages?
                     .OrderByDescending(m => m.SentAt)
                     .FirstOrDefault()?
                     .SentAt,
-
-                UnreadCount = 0, // TODO: реализовать подсчёт непрочитанных (см. ниже)
-
-                Members = c.Members.Select(m => new UserPreviewDto
+                UnreadCount = 0, // TODO: реализовать позже
+                Members = r.Members.Select(m => new UserPreviewDto
                 {
                     Id = m.UserId,
-                    Nickname = m.User?.Nickname ?? "Пользователь",
+                    Nickname = m.User?.Nickname ?? "Аноним"
                 }).ToList()
             }).ToList();
 
             return dtos;
         }
 
-        public async Task<ErrorOr<long>> CreatePrivateChatAsync(long currentUserId, long otherUserId)
+        // Создать новую комнату просмотра
+        public async Task<ErrorOr<long>> CreateWatchRoomAsync(long creatorId, long filmId, string? roomName = null)
         {
-           if (currentUserId == otherUserId) {
-                return ChatErrors.CannotCreateChatWithSelf;
-           }
+            var filmResult = await _filmCatalogRepository.GetFilmObjectByIdAsync(filmId);
+            if (filmResult.IsError)
+                return filmResult.Errors;
 
-            var existingChat = await _chatRepository.FindPrivateChatBetweenAsync(currentUserId, otherUserId);
-            if (existingChat != null) {
-                return existingChat.Id;
-            }
-            
-            // Getting other user to fill name of chat
-            var otherUser = await _userRepository.GetByIdAsync(otherUserId);
+            var film = filmResult.Value;
 
-            if (otherUser == null)
-            { 
-                return Error.NotFound($"Пользователь с ID {otherUserId} не найден");
-            }
-
-            var chat = new Chat
+            var room = new Chat
             {
-                Name = otherUser.Nickname,
-                IsGroup = false,
+                IsWatchRoom = true,
+                Name = roomName ?? film.FilmName,
+                HostUserId = creatorId,
+                CurrentFilmId = filmId,
+                CurrentPositionSeconds = 0,
+                IsPaused = true,
+                PlaybackRate = 1.0f,
                 CreatedAt = DateTime.UtcNow,
                 LastActivityAt = DateTime.UtcNow
             };
 
-            await _chatRepository.AddChatAsync(chat);
-
-            await _chatRepository.AddMemberAsync(chat.Id, currentUserId, "member");
-            await _chatRepository.AddMemberAsync(chat.Id, otherUserId, "member");
-
+            await _chatRepository.AddChatAsync(room);
+            await _chatRepository.AddMemberAsync(room.Id, creatorId, "host");
             await _chatRepository.SaveChangesAsync();
 
-            return chat.Id;
+            return room.Id;
         }
 
-        public async Task<ErrorOr<long>> CreateGroupChatAsync(long creatorId, string name, List<long> initialMemberIds)
+        // Удалить комнату (только host или moderator)
+        public async Task<ErrorOr<Success>> DeleteChatAsync(long currentUserId, long roomId)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                return ChatErrors.GroupNameRequired;
-
-            if (!initialMemberIds.Any())
-                return ChatErrors.GroupMustHaveMembers;
-
-            // Проверяем, что все пользователи существуют
-            foreach (var userId in initialMemberIds)
+            var room = await _chatRepository.GetByIdAsync(roomId);
+            if (room == null || !room.IsWatchRoom)
             {
-                var user = await _userRepository.GetByIdAsync(userId);
-                if (user == null)
-                    return Error.NotFound($"Пользователь {userId} не найден");
-            }
-
-            var chat = new Chat
-            {
-                IsGroup = true,
-                Name = name,
-                CreatedAt = DateTime.UtcNow,
-                LastActivityAt = DateTime.UtcNow
-            };
-
-            await _chatRepository.AddChatAsync(chat);
-
-            // Добавляем создателя как админа
-            await _chatRepository.AddMemberAsync(chat.Id, creatorId, "admin");
-
-            // Добавляем остальных
-            foreach (var userId in initialMemberIds)
-            {
-                await _chatRepository.AddMemberAsync(chat.Id, userId, "member");
-            }
-
-            await _chatRepository.SaveChangesAsync();
-
-            return chat.Id;
-        }
-
-        public async Task<ErrorOr<Success>> DeleteChatAsync(long currentUserId, long chatId)
-        {
-            var chat = await _chatRepository.GetByIdAsync(chatId);
-            if (chat == null)
                 return ChatErrors.ChatNotFound;
+            }
 
-            var member = chat.Members.FirstOrDefault(m => m.UserId == currentUserId);
+            var member = room.Members.FirstOrDefault(m => m.UserId == currentUserId);
             if (member == null)
+            {
                 return ChatErrors.UserNotInChat;
+            }
 
-            // Только админ может удалять
-            if (member.Role != "admin")
-                return Error.Forbidden("Только администратор может удалить чат");
+            if (!IsHostOrModerator(member.Role)) { 
+                return Error.Forbidden("Только хозяин или модератор может удалить комнату");
+            }
 
-            await _chatRepository.DeleteChatAsync(chatId);
+            await _chatRepository.DeleteChatAsync(roomId);
             await _chatRepository.SaveChangesAsync();
 
             return Result.Success;
         }
 
-        public async Task<ErrorOr<Success>> AddMemberAsync(long currentUserId, long chatId, long userIdToAdd)
+        // Добавить участника (только host или moderator)
+        public async Task<ErrorOr<Success>> AddMemberAsync(long currentUserId, long roomId, long userIdToAdd)
         {
-            var chat = await _chatRepository.GetByIdAsync(chatId);
-            if (chat == null)
+            var room = await _chatRepository.GetByIdAsync(roomId);
+            if (room == null || !room.IsWatchRoom)
+            {
                 return ChatErrors.ChatNotFound;
+            }
 
-            if (!chat.IsGroup)
-                return Error.Validation("Нельзя добавлять участников в приватный чат");
+            var currentMember = room.Members.FirstOrDefault(m => m.UserId == currentUserId);
+            if (currentMember == null) { 
+                return ChatErrors.UserNotInChat;
+            }
 
-            var currentMember = chat.Members.FirstOrDefault(m => m.UserId == currentUserId);
-            if (currentMember == null || currentMember.Role != "admin")
-                return Error.Forbidden("Только администратор может добавлять участников");
+            if (!IsHostOrModerator(currentMember.Role))
+            {
+                return Error.Forbidden("Нет прав добавлять участников");
+            }
 
-            if (chat.Members.Any(m => m.UserId == userIdToAdd))
+            if (room.Members.Any(m => m.UserId == userIdToAdd))
+            {
                 return ChatErrors.UserAlreadyInChat;
+            }
 
-            var userToAdd = await _userRepository.GetByIdAsync(userIdToAdd);
-            if (userToAdd == null)
+            var user = await _userRepository.GetByIdAsync(userIdToAdd);
+            if (user == null)
+            {
                 return AuthErrors.UserNotFound;
+            }
 
-            await _chatRepository.AddMemberAsync(chatId, userIdToAdd, "member");
+            await _chatRepository.AddMemberAsync(roomId, userIdToAdd, "member");
             await _chatRepository.SaveChangesAsync();
 
             return Result.Success;
         }
 
-        public async Task<ErrorOr<Success>> RemoveMemberAsync(long currentUserId, long chatId, long userIdToRemove)
+        // Удалить участника (только host или moderator)
+        public async Task<ErrorOr<Success>> RemoveMemberAsync(long currentUserId, long roomId, long userIdToRemove)
         {
-            var chat = await _chatRepository.GetByIdAsync(chatId);
-            if (chat == null)
+            var room = await _chatRepository.GetByIdAsync(roomId);
+            if (room == null || !room.IsWatchRoom)
+            {
                 return ChatErrors.ChatNotFound;
+            }
 
-            if (!chat.IsGroup)
-                return Error.Validation("Нельзя удалять участников из приватного чата");
-
-            var currentMember = chat.Members.FirstOrDefault(m => m.UserId == currentUserId);
-            if (currentMember == null || currentMember.Role != "admin")
-                return Error.Forbidden("Только администратор может удалять участников");
-
-            if (!chat.Members.Any(m => m.UserId == userIdToRemove))
+            var currentMember = room.Members.FirstOrDefault(m => m.UserId == currentUserId);
+            if (currentMember == null)
+            {
                 return ChatErrors.UserNotInChat;
+            }
 
-            await _chatRepository.RemoveMemberAsync(chatId, userIdToRemove);
+            if (!IsHostOrModerator(currentMember.Role))
+            {
+                return Error.Forbidden("Нет прав удалять участников");
+            }
+
+            if (!room.Members.Any(m => m.UserId == userIdToRemove))
+            {
+                return ChatErrors.UserNotInChat;
+            }
+
+            // Нельзя удалить самого себя
+            if (userIdToRemove == currentUserId)
+            {
+                return Error.Validation("Нельзя удалить самого себя");
+            }
+
+            await _chatRepository.RemoveMemberAsync(roomId, userIdToRemove);
             await _chatRepository.SaveChangesAsync();
 
+            return Result.Success;
+        }
+
+        // Обновить состояние плеера (только host или moderator)
+        public async Task<ErrorOr<Success>> UpdatePlayerStateAsync(long roomId, long userId, PlayerActionDTO action)
+        {
+            var room = await _chatRepository.GetByIdAsync(roomId);
+            if (room == null || !room.IsWatchRoom)
+            {
+                return ChatErrors.ChatNotFound;
+            }
+
+            var member = room.Members.FirstOrDefault(m => m.UserId == userId);
+            if (member == null)
+            {
+                return ChatErrors.UserNotInChat;
+            }
+
+            if (!IsHostOrModerator(member.Role))
+            {
+                return Error.Forbidden("Нет прав управлять воспроизведением");
+            }
+
+            if (action.PositionSeconds.HasValue)
+            {
+                room.CurrentPositionSeconds = action.PositionSeconds.Value;
+            }
+
+            if (action.IsPaused.HasValue)
+            {
+                room.IsPaused = action.IsPaused.Value;
+            }
+
+            if (action.PlaybackRate.HasValue)
+            {
+                room.PlaybackRate = action.PlaybackRate.Value;
+            }
+
+            room.LastActivityAt = DateTime.UtcNow;
+
+            _chatRepository.UpdateChatAsync(room);
+            await _chatRepository.SaveChangesAsync();
 
             return Result.Success;
+        }
+
+        // Получить текущее состояние плеера (доступно всем участникам комнаты)
+        public async Task<ErrorOr<PlayerStateDTO>> GetPlayerStateAsync(long roomId)
+        {
+            var room = await _chatRepository.GetWatchRoomByIdAsync(roomId);
+            if (room == null || !room.IsWatchRoom)
+                return ChatErrors.ChatNotFound;
+
+            return new PlayerStateDTO
+            {
+                RoomId = roomId,
+                CurrentFilmId = room.CurrentFilmId,
+                FilmName = room.CurrentFilm?.FilmName,
+                CurrentPositionSeconds = room.CurrentPositionSeconds,
+                IsPaused = room.IsPaused,
+                PlaybackRate = room.PlaybackRate,
+                HostUserId = room.HostUserId
+            };
+        }
+
+        // Назначить модератора (только host)
+        public async Task<ErrorOr<Success>> GrantModeratorRoleAsync(long currentUserId, long roomId, long targetUserId)
+        {
+            var room = await _chatRepository.GetByIdAsync(roomId);
+            if (room == null || !room.IsWatchRoom)
+                return ChatErrors.ChatNotFound;
+
+            var currentMember = room.Members.FirstOrDefault(m => m.UserId == currentUserId);
+            if (currentMember == null)
+                return ChatErrors.UserNotInChat;
+
+            if (currentMember.Role != "host")
+                return Error.Forbidden("Только хозяин комнаты может назначать модераторов");
+
+            var targetMember = room.Members.FirstOrDefault(m => m.UserId == targetUserId);
+            if (targetMember == null)
+                return ChatErrors.UserNotInChat;
+
+            if (targetMember.Role == "host")
+                return Error.Validation("Хозяин комнаты не может быть модератором");
+
+            targetMember.Role = "moderator";
+
+            _chatRepository.UpdateChatAsync(room);
+            await _chatRepository.SaveChangesAsync();
+
+            return Result.Success;
+        }
+
+        // Снять модератора (только host)
+        public async Task<ErrorOr<Success>> RevokeModeratorRoleAsync(long currentUserId, long roomId, long targetUserId)
+        {
+            var room = await _chatRepository.GetByIdAsync(roomId);
+            if (room == null || !room.IsWatchRoom)
+                return ChatErrors.ChatNotFound;
+
+            var currentMember = room.Members.FirstOrDefault(m => m.UserId == currentUserId);
+            if (currentMember == null)
+                return ChatErrors.UserNotInChat;
+
+            if (currentMember.Role != "host")
+                return Error.Forbidden("Только хозяин комнаты может снимать модераторов");
+
+            var targetMember = room.Members.FirstOrDefault(m => m.UserId == targetUserId);
+            if (targetMember == null)
+                return ChatErrors.UserNotInChat;
+
+            if (targetMember.Role != "moderator")
+                return Error.Validation("Пользователь не является модератором");
+
+            targetMember.Role = "member";
+
+            _chatRepository.UpdateChatAsync(room);
+            await _chatRepository.SaveChangesAsync();
+
+            return Result.Success;
+        }
+
+        // Вспомогательный метод для проверки прав
+        private static bool IsHostOrModerator(string role)
+        {
+            return role == "host" || role == "moderator";
         }
     }
 }

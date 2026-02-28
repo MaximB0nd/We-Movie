@@ -78,6 +78,4 @@ namespace WeMovieSync.Infrastructure.Context
             .OnDelete(DeleteBehavior.SetNull);  // если фильм удалён — комната остаётся
         }
     }
-
-    }
 }

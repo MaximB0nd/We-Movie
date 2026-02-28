@@ -20,6 +20,8 @@ namespace WeMovieSync.Core.Models
 
         // Поля для комнаты просмотра 
         public long? CurrentFilmId { get; set; }  // привязка к фильму из каталога
+        public FilmCatalog? CurrentFilm { get; set; }
+
         public DateTime? FilmStartedAt { get; set; }
         public double CurrentPositionSeconds { get; set; } = 0;
         public bool IsPaused { get; set; } = true;
@@ -31,6 +33,5 @@ namespace WeMovieSync.Core.Models
         // Навигация
         public ICollection<ChatMember> Members { get; set; } = new List<ChatMember>();
         public ICollection<Message> Messages { get; set; } = new List<Message>();
-        public FilmCatalog? CurrentFilm { get; set; }
     }
 }

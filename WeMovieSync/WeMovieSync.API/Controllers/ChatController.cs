@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using WeMovieSync.Application.Extensions;
 using WeMovieSync.Application.DTOs;
-using WeMovieSync.Application.Services;
+using WeMovieSync.Application.Extensions;
 using WeMovieSync.Application.Interfaces;   
 
 
@@ -38,32 +37,16 @@ namespace WeMovieSync.API.Controllers
         }
 
 
-        // POST: creating private chat between two users
-        [Authorize]
-        [HttpPost("private")]
-        public async Task<IActionResult> CreatePrivatChat([FromBody] CreatePrivateChatRequistDTO dto)
-        {
-            try
-            {
-                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-                var result = await _chatService.CreatePrivateChatAsync(userId, dto.OtherUserId);
-                return result.ToActionResult();
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
+        
         // POST: creating group chat
         [Authorize]
-        [HttpPost("group")]
-        public async Task<IActionResult> CreateGroupChat([FromBody] CreateGroupChatRequestDTO dto)
+        [HttpPost("room")]
+        public async Task<IActionResult> CreateRoom([FromBody] CreateRoomRequestDTO dto)
         {
             try
             {
                 var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-                var result = await _chatService.CreateGroupChatAsync(userId, dto.Name, dto.InitialMemberIds);
+                var result = await _chatService.CreateWatchRoomAsync(userId, dto.token, dto.Name);
                 return result.ToActionResult();
             }
             catch (Exception)
@@ -115,6 +98,79 @@ namespace WeMovieSync.API.Controllers
             {
                 var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
                 var result = await _chatService.RemoveMemberAsync(userId, chatId, dto.UserId);
+                return result.ToActionResult();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        // GET: get state of room
+        [Authorize]
+        [HttpGet("rooms/{roomId}/player-state")]
+        public async Task<IActionResult> GetPlayerState(long roomId)
+        {
+            try
+            {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var result = await _chatService.GetPlayerStateAsync(roomId);
+                if (result.IsError)
+                {
+                    return result.ToActionResult();
+                }
+
+                return Ok(result.Value);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        // PUT: update player state
+        [Authorize]
+        [HttpPut("rooms/{roomId}/player-state")]
+        public async Task<IActionResult> UpdatePlayerState(long roomId, [FromBody] PlayerActionDTO action)
+        {
+            try
+            {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var result = await _chatService.UpdatePlayerStateAsync(roomId, userId, action);
+                return result.ToActionResult();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        // PUT: make user moderator of room
+        [Authorize]
+        [HttpPut("rooms/{roomId}/grant-moderator")]
+        public async Task<IActionResult> GrantModerator(long roomId, [FromBody] ModeratorActionDTO dto)
+        {
+            try
+            {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var result = await _chatService.GrantModeratorRoleAsync(userId, roomId, dto.UserId);
+                return result.ToActionResult();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        // PUT: revoke moderator role
+        [Authorize]
+        [HttpPut("rooms/{roomId}/revoke-moderator")]
+        public async Task<IActionResult> RevokeModerator(long roomId, [FromBody] ModeratorActionDTO dto)
+        {
+            try
+            {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var result = await _chatService.RevokeModeratorRoleAsync(userId, roomId, dto.UserId);
                 return result.ToActionResult();
             }
             catch (Exception)

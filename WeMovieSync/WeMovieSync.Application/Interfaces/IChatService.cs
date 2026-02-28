@@ -5,14 +5,9 @@ namespace WeMovieSync.Application.Interfaces
 {
     public interface IChatService
     {
+        // СТАРЫЕ МЕТОДЫ
         // Получить чаты текущего пользователя (с preview)
         Task<ErrorOr<List<ChatPreviewDto>>> GetUserChatsAsync(long currentUserId);
-
-        // Создать приватный чат (1:1) — если уже есть, вернуть существующий
-        Task<ErrorOr<long>> CreatePrivateChatAsync(long currentUserId, long otherUserId);
-
-        // Создать групповой чат
-        Task<ErrorOr<long>> CreateGroupChatAsync(long creatorId, string name, List<long> initialMemberIds);
 
         // Удалить чат (только если админ или участник)
         Task<ErrorOr<Success>> DeleteChatAsync(long currentUserId, long chatId);
@@ -22,5 +17,14 @@ namespace WeMovieSync.Application.Interfaces
 
         // Удалить участника из группового чата (только админ)
         Task<ErrorOr<Success>> RemoveMemberAsync(long currentUserId, long chatId, long userIdToRemove);
+
+        // НОВЫЕ МЕТОДЫ
+        Task<ErrorOr<long>> CreateWatchRoomAsync(long creatorId, long filmId, string? roomName = null);
+        Task<ErrorOr<Success>> UpdatePlayerStateAsync(long roomId, long userId, PlayerActionDTO action);
+        Task<ErrorOr<PlayerStateDTO>> GetPlayerStateAsync(long roomId);
+
+        // Назначение модератора
+        Task<ErrorOr<Success>> GrantModeratorRoleAsync(long currentUserId, long roomId, long targetUserId);
+        Task<ErrorOr<Success>> RevokeModeratorRoleAsync(long currentUserId, long roomId, long targetUserId);
     }
 }

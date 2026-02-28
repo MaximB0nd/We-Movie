@@ -1,12 +1,4 @@
-﻿using ErrorOr;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Core.Models;
 using WeMovieSync.Infrastructure.Context;
@@ -86,8 +78,10 @@ namespace WeMovieSync.Infrastructure.Repositories
             var message = await _context.Messages
                 .Include(m => m.Sender)
                 .FirstOrDefaultAsync(m => m.Id == messageId);
-
-            _context.Messages.Remove(message);
+            if (message != null)
+            {
+                _context.Messages.Remove(message);
+            }
         }
 
         // Checking message exists or not
@@ -111,7 +105,7 @@ namespace WeMovieSync.Infrastructure.Repositories
         }
 
         // Getting Message by messageId
-        public async Task<Message?> GetMsgByIdAsync(long messageId)
+        public async Task<Message?> GetMsgByIdAsync(long? messageId)
         {
             return await _context.Messages
                 .AsNoTracking()                          // ← обязательно для 
