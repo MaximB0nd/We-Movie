@@ -131,7 +131,7 @@ namespace WeMovieSync.API.Hubs
 
             long messageId = sendResult.Value;
 
-            // Получаем полное сообщение (с ID, временем и т.д.)
+            // Получаем полное сообщение 
             var message = await _msgService.GetMsgsAsync(userId, dto.RoomId, null); // или отдельный метод GetById
             var sentMessage = message.Value.FirstOrDefault(m => m.MessageId == messageId);
 
