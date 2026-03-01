@@ -1,10 +1,9 @@
-import os
 import requests
-import json
+import base64  
+import uuid
 import time
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, List
 import logging
-from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -19,24 +18,16 @@ class GigaChatClient:
     API_URL = "https://gigachat.devices.sberbank.ru/api/v1"
     
     def __init__(self, 
-                 model: str = "GigaChat", 
-                 system_instruction: Optional[str] = None,
-                 client_id: Optional[str] = None,
-                 client_secret: Optional[str] = None,
-                 scope: str = "GIGACHAT_API_PERS",
-                 verify_ssl: bool = False,
-                 timeout: int = 30):
+             model: str = "GigaChat", 
+             system_instruction: Optional[str] = None,
+             auth_key: Optional[str] = None,
+             client_id: Optional[str] = None,
+             client_secret: Optional[str] = None,
+             scope: str = "GIGACHAT_API_PERS",
+             verify_ssl: bool = False,
+             timeout: int = 30):
         """
         Инициализация клиента GigaChat
-        
-        Args:
-            model: Название модели (GigaChat, GigaChat-Pro, GigaChat-Lite, GigaChat-Max)
-            system_instruction: Системная инструкция
-            client_id: Client ID для авторизации
-            client_secret: Client Secret для авторизации
-            scope: Область доступа
-            verify_ssl: Проверять SSL сертификаты
-            timeout: Таймаут запросов в секундах
         """
         self.model = model
         self.system_instruction = system_instruction
@@ -44,41 +35,61 @@ class GigaChatClient:
         self.verify_ssl = verify_ssl
         self.timeout = timeout
         
-        # Получаем учетные данные из параметров или переменных окружения
-        self.client_id = client_id or os.getenv("GIGACHAT_CLIENT_ID")
-        self.client_secret = client_secret or os.getenv("GIGACHAT_CLIENT_SECRET")
+        # Сохраняем оба варианта
+        self.auth_key = auth_key
+        self.client_id = client_id
+        self.client_secret = client_secret
         
-        if not self.client_id or not self.client_secret:
+        # Проверяем наличие хотя бы одного варианта
+        if not (self.auth_key or (self.client_id and self.client_secret)):
             raise ValueError(
-                "GigaChat credentials not found. Please provide client_id and client_secret "
-                "or set GIGACHAT_CLIENT_ID and GIGACHAT_CLIENT_SECRET in .env file\n"
-                "Get your credentials at: https://developers.sber.ru/studio"
+                "GigaChat credentials not found. Please provide auth_key "
+                "or both client_id and client_secret"
             )
         
         self.access_token = None
         self.token_expires_at = 0
         logger.info(f"✅ GigaChat client initialized with model: {model}")
     
+    def _generate_rquid(self) -> str:
+            """
+            Генерация уникального идентификатора для запроса (RqUID)
+            Требуется GigaChat API для каждого запроса
+            """
+            return str(uuid.uuid4())
+
     def _get_token(self) -> Optional[str]:
         """
         Получение токена доступа
-        Документация: https://developers.sber.ru/docs/ru/gigachat/api/authorization
         """
-        # Проверяем, не истек ли текущий токен
         current_time = time.time()
         if self.access_token and current_time < self.token_expires_at:
             return self.access_token
         
         try:
-            import base64
-            auth_string = f"{self.client_id}:{self.client_secret}"
-            auth_base64 = base64.b64encode(auth_string.encode()).decode()
+            # Определяем заголовок Authorization
+            if self.auth_key:
+                # Используем готовый ключ
+                auth_header = f"Basic {self.auth_key}"
+                logger.debug("Using auth_key for authorization")
+            elif self.client_id and self.client_secret:
+                # Формируем из client_id и client_secret
+                auth_string = f"{self.client_id}:{self.client_secret}"
+                auth_base64 = base64.b64encode(auth_string.encode()).decode()
+                auth_header = f"Basic {auth_base64}"
+                logger.debug("Using client_id:client_secret pair for authorization")
+            else:
+                logger.error("No authorization credentials provided")
+                return None
             
             headers = {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Accept": "application/json",
-                "Authorization": f"Basic {auth_base64}"
+                "Authorization": auth_header,
+                "RqUID": self._generate_rquid()
             }
+        
+        # ... остальной код без изменений
             
             data = {"scope": self.scope}
             
@@ -113,23 +124,11 @@ class GigaChatClient:
             return None
     
     def send_request(self, 
-                    message: str, 
-                    temperature: float = 0.7,
-                    max_tokens: int = 1000,
-                    top_p: float = 0.9,
-                    n: int = 1) -> Optional[str]:
+                message: str, 
+                temperature: float = 0.7,
+                max_tokens: int = 1000) -> Optional[str]:
         """
         Отправка запроса к GigaChat
-        
-        Args:
-            message: Сообщение пользователя
-            temperature: Температура генерации (0.0 - 1.0)
-            max_tokens: Максимальное количество токенов в ответе
-            top_p: Top-p sampling параметр
-            n: Количество вариантов ответа
-            
-        Returns:
-            Ответ от GigaChat или None в случае ошибки
         """
         try:
             token = self._get_token()
@@ -137,22 +136,20 @@ class GigaChatClient:
                 logger.error("❌ Failed to obtain access token")
                 return None
             
+            logger.debug(f"Using token: {token[:50]}...")
+            
             headers = {
                 "Authorization": f"Bearer {token}",
                 "Content-Type": "application/json"
             }
             
-            # Формируем сообщения
             messages = []
-            
-            # Добавляем системную инструкцию, если она есть
             if self.system_instruction:
                 messages.append({
                     "role": "system",
                     "content": self.system_instruction
                 })
             
-            # Добавляем сообщение пользователя
             messages.append({
                 "role": "user",
                 "content": message
@@ -162,12 +159,12 @@ class GigaChatClient:
                 "model": self.model,
                 "messages": messages,
                 "temperature": temperature,
-                "max_tokens": max_tokens,
-                "top_p": top_p,
-                "n": n
+                "max_tokens": max_tokens
             }
             
-            logger.info(f"Sending request to GigaChat ({self.model})...")
+            logger.debug(f"Payload: {payload}")
+            logger.info(f"📡 Sending request to GigaChat API...")
+            
             response = requests.post(
                 f"{self.API_URL}/chat/completions",
                 headers=headers,
@@ -176,29 +173,31 @@ class GigaChatClient:
                 timeout=self.timeout
             )
             
+            logger.info(f"Response status: {response.status_code}")
+            logger.debug(f"Response headers: {response.headers}")
+            logger.debug(f"Response body: {response.text[:500]}")
+            
             if response.status_code == 200:
                 result = response.json()
-                # Извлекаем текст ответа
                 if result.get("choices") and len(result["choices"]) > 0:
                     content = result["choices"][0].get("message", {}).get("content", "")
-                    usage = result.get("usage", {})
-                    logger.info(f"✅ Response received. Tokens used: {usage.get('total_tokens', 'unknown')}")
                     return content
                 else:
-                    logger.warning("⚠️ No content in response")
+                    logger.warning("No choices in response")
                     return None
             else:
-                logger.error(f"❌ API error: {response.status_code} - {response.text}")
+                logger.error(f"❌ API error: {response.status_code}")
+                logger.error(f"Response body: {response.text}")
                 return None
                 
         except requests.exceptions.Timeout:
-            logger.error("❌ Timeout while sending request to GigaChat")
+            logger.error("❌ Timeout while sending request")
             return None
-        except requests.exceptions.ConnectionError:
-            logger.error("❌ Connection error while sending request to GigaChat")
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"❌ Connection error: {e}")
             return None
         except Exception as e:
-            logger.error(f"❌ Error sending request to GigaChat: {e}")
+            logger.error(f"❌ Error sending request: {e}")
             return None
     
     def send_chat_request(self, 

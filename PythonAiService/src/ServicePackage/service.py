@@ -1,49 +1,52 @@
-from src.ClientPackage.client import GigaChatClient  # Обратите внимание на заглавную G
-from src.config import Settings  # Импортируем класс Settings
+from src.ClientPackage.client import GigaChatClient
+from src.config import settings
 import logging
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
 class Service:
-    def __init__(self, settings: Optional[Settings] = None):
-        self.settings = settings or Settings()
-
-        # Проверяем наличие учетных данных
-        if not self.settings.GIGACHAT_CLIENT_ID or not self.settings.GIGACHAT_CLIENT_SECRET:
-            logger.error("GigaChat credentials not found in settings")
-            logger.error("Please set GIGACHAT_CLIENT_ID and GIGACHAT_CLIENT_SECRET in .env file")
-            logger.error("Get credentials at: https://developers.sber.ru/studio")
+    def __init__(self):
+        """Инициализация сервиса с GigaChat"""
+        self.settings = settings
+        
+        # Проверяем наличие учетных данных (поддержка обоих вариантов)
+        has_auth_key = hasattr(self.settings, 'GIGACHAT_AUTH_KEY') and self.settings.GIGACHAT_AUTH_KEY
+        has_client_creds = (hasattr(self.settings, 'GIGACHAT_CLIENT_ID') and self.settings.GIGACHAT_CLIENT_ID and 
+                           hasattr(self.settings, 'GIGACHAT_CLIENT_SECRET') and self.settings.GIGACHAT_CLIENT_SECRET)
+        
+        if not (has_auth_key or has_client_creds):
+            logger.error("❌ GigaChat credentials not found")
+            logger.error("Please set either GIGACHAT_AUTH_KEY or both GIGACHAT_CLIENT_ID and GIGACHAT_CLIENT_SECRET in .env file")
             raise ValueError("GigaChat credentials are required")
-
-        # Инициализируем GigaChat клиент
+        
         try:
+            # Передаём оба варианта, клиент сам выберет нужный
             self.gigachat_client = GigaChatClient(
                 model=self.settings.MODEL,
                 system_instruction=self.settings.SYSTEM_INSTRUCTION,
-                client_id=self.settings.GIGACHAT_CLIENT_ID,
-                client_secret=self.settings.GIGACHAT_CLIENT_SECRET,
+                auth_key=getattr(self.settings, 'GIGACHAT_AUTH_KEY', None),
+                client_id=getattr(self.settings, 'GIGACHAT_CLIENT_ID', None),
+                client_secret=getattr(self.settings, 'GIGACHAT_CLIENT_SECRET', None),
                 verify_ssl=self.settings.VERIFY_SSL
             )
-            logger.info(f"Service initialized with GigaChat model: {self.settings.MODEL}")
+            logger.info(f"✅ Service initialized with model: {self.settings.MODEL}")
         except Exception as e:
-            logger.error(f"Failed to initialize GigaChat client: {e}")
+            logger.error(f"❌ Failed to initialize GigaChat client: {e}")
             raise
-
-    def ask_ai(self, message: str) -> Optional[str]:
+    
+    def ask_ai(self, message: str) -> str | None:
+        """Отправка запроса к GigaChat"""
         if not message or not message.strip():
-            logger.warning("Empty message received")
+            logger.warning("⚠️ Empty message received")
             return None
-
-        logger.info(f"Sending request to GigaChat: {message[:100]}...")
+        
+        logger.info(f"📤 Sending request: {message[:50]}...")
         try:
             response = self.gigachat_client.send_request(message)
             if response:
-                logger.info(f"Response received from GigaChat ({len(response)} chars)")
+                logger.info(f"📥 Response received ({len(response)} chars)")
                 return response
-            else:
-                logger.warning("Empty response from GigaChat")
-                return None
+            return None
         except Exception as e:
-            logger.error(f"Error in ask_ai: {e}")
+            logger.error(f"❌ Error: {e}")
             return None

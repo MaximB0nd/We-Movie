@@ -6,51 +6,36 @@ class Settings(BaseSettings):
     """
     Настройки приложения с GigaChat
     """
-    # GigaChat settings - обязательные параметры
-    GIGACHAT_CLIENT_ID: str = Field(..., description="GigaChat Client ID (обязательно)")
-    GIGACHAT_CLIENT_SECRET: str = Field(..., description="GigaChat Client Secret (обязательно)")
+    # Единственный обязательный ключ для авторизации
+    GIGACHAT_AUTH_KEY: str = Field(..., description="Authorization key from Sber studio")
     
-    # Model settings
-    MODEL: str = Field(
-        default="GigaChat", 
-        description="AI model name (GigaChat, GigaChat-Pro, GigaChat-Lite, GigaChat-Max)"
-    )
+    # Эти поля больше не обязательны. Можно оставить для обратной совместимости,
+    # сделав их необязательными (Optional), или просто удалить.
+    GIGACHAT_CLIENT_ID: Optional[str] = Field(None, description="Client ID (not needed)")
     
-    # System instruction
+    GIGACHAT_CLIENT_SECRET: Optional[str] = Field(None, description="Client Secret (not needed)")
+    
+    # Модель и инструкция
+    MODEL: str = Field(default="GigaChat", description="AI model name")
     SYSTEM_INSTRUCTION: str = Field(
-        default="Ты - полезный ассистент. Отвечай на русском языке четко и по делу. "
-                "Помогай пользователям с их вопросами. Будь вежливым и профессиональным.",
+        default="Ты - полезный ассистент. Отвечай на русском языке четко и по делу.",
         description="System instruction for AI"
     )
     
-    # Server settings
-    HOST: str = Field(default="0.0.0.0", description="Host to bind")
+    # Серверные настройки
+    HOST: str = Field(default="127.0.0.1", description="Host to bind")
     PORT: int = Field(default=8000, description="Port to bind")
-    DEBUG: bool = Field(default=False, description="Debug mode")
+    DEBUG: bool = Field(default=True, description="Debug mode")
     
-    # SSL settings для GigaChat
+    # SSL и логирование
     VERIFY_SSL: bool = Field(default=False, description="Verify SSL certificates")
-    
-    # Logging
     LOG_LEVEL: str = Field(default="INFO", description="Logging level")
     
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = True
-        extra = "ignore"
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # Проверка наличия обязательных полей
-        if not self.GIGACHAT_CLIENT_ID:
-            print("❌ GIGACHAT_CLIENT_ID is required but not set in .env file")
-            print("   Get your credentials at: https://developers.sber.ru/studio")
-        if not self.GIGACHAT_CLIENT_SECRET:
-            print("❌ GIGACHAT_CLIENT_SECRET is required but not set in .env file")
-            print("   Get your credentials at: https://developers.sber.ru/studio")
-        if self.GIGACHAT_CLIENT_ID and self.GIGACHAT_CLIENT_SECRET:
-            print("✅ GigaChat credentials loaded successfully")
+        extra = "ignore"  # Игнорировать лишние поля в .env
 
 # Создаем глобальный экземпляр настроек
 settings = Settings()
