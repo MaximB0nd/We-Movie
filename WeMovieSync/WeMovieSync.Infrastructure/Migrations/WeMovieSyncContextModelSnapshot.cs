@@ -122,6 +122,39 @@ namespace WeMovieSync.Infrastructure.Migrations
                     b.ToTable("ChatMembers");
                 });
 
+            modelBuilder.Entity("WeMovieSync.Core.Models.FilmCatalog", b =>
+                {
+                    b.Property<long>("Token")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Token"));
+
+                    b.Property<string>("Category")
+                        .HasColumnType("text");
+
+                    b.Property<TimeSpan?>("Duration")
+                        .HasColumnType("interval");
+
+                    b.Property<string>("FilmDescription")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FilmName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("bytea");
+
+                    b.HasKey("Token");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.ToTable("FilmCatalog");
+                });
+
             modelBuilder.Entity("WeMovieSync.Core.Models.Message", b =>
                 {
                     b.Property<long>("Id")
@@ -135,12 +168,6 @@ namespace WeMovieSync.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DeliveredAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("EditedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsEdited")
-                        .HasColumnType("boolean");
 
                     b.Property<long>("SenderId")
                         .HasColumnType("bigint");
@@ -177,15 +204,24 @@ namespace WeMovieSync.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("HashedPassword")
                         .HasColumnType("text");
 
                     b.Property<string>("Nickname")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Nickname")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

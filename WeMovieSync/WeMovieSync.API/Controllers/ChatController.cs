@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using WeMovieSync.API.Extensions;
+using WeMovieSync.Application.Extensions;
 using WeMovieSync.Application.DTOs;
 using WeMovieSync.Application.Services;
+using WeMovieSync.Application.Interfaces;   
 
 
 namespace WeMovieSync.API.Controllers
@@ -12,9 +13,9 @@ namespace WeMovieSync.API.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
-        private readonly ChatService _chatService;
+        private readonly IChatService _chatService;
 
-        public ChatController(ChatService chatService)
+        public ChatController(IChatService chatService)
         {
             _chatService = chatService;
         }

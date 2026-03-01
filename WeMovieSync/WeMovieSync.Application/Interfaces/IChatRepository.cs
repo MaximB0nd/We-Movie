@@ -14,7 +14,7 @@ namespace WeMovieSync.Application.Interfaces
 
 
         // Members
-        Task<bool> IsUserInChatsAsync(long userId, long chatId);
+        Task<bool> IsUserInChatAsync(long userId, long chatId);
         Task AddMemberAsync(long chatId, long userId, string role = "member");
         Task RemoveMemberAsync(long chatId, long userId);
 

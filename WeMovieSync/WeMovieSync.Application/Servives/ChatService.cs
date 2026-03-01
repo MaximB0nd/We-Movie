@@ -61,9 +61,18 @@ namespace WeMovieSync.Application.Services
             if (existingChat != null) {
                 return existingChat.Id;
             }
+            
+            // Getting other user to fill name of chat
+            var otherUser = await _userRepository.GetByIdAsync(otherUserId);
+
+            if (otherUser == null)
+            { 
+                return Error.NotFound($"Пользователь с ID {otherUserId} не найден");
+            }
 
             var chat = new Chat
             {
+                Name = otherUser.Nickname,
                 IsGroup = false,
                 CreatedAt = DateTime.UtcNow,
                 LastActivityAt = DateTime.UtcNow

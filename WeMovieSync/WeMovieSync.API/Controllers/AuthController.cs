@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WeMovieSync.API.Extensions;
+using WeMovieSync.Application.Extensions;
 using WeMovieSync.Application.DTOs;
 using WeMovieSync.Application.Interfaces;
 

@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WeMovieSync.API.Extensions
+namespace WeMovieSync.Application.Extensions
 {
     public static class ErrorOrExtensions
     {
