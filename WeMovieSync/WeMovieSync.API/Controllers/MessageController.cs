@@ -4,8 +4,6 @@ using System.Security.Claims;
 using WeMovieSync.Application.DTOs;
 using WeMovieSync.Application.Extensions;
 using WeMovieSync.Application.Interfaces;
-using WeMovieSync.Application.Services;
-using WeMovieSync.Core.Models;
 
 
 namespace WeMovieSync.API.Controllers
@@ -35,24 +33,6 @@ namespace WeMovieSync.API.Controllers
             catch (Exception)
             {
                 // TODO: добавить логгер
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
-        // POST: отправить сообщение
-        [Authorize]
-        [HttpPost("chats/{chatId}/messages")]
-        public async Task<IActionResult> SendMessage(long chatId, [FromBody] SendMessageRequestDTO dto)
-        {
-            try
-            {
-                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-                dto.ChatId = chatId; // на всякий случай
-                var result = await _msgService.SendMsgAsync(dto, userId);
-                return result.ToActionResult();
-            }
-            catch (Exception)
-            {
                 return StatusCode(500, "Internal server error");
             }
         }

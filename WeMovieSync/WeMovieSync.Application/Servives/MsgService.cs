@@ -1,14 +1,8 @@
 ﻿using ErrorOr;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WeMovieSync.Application.DTOs;
 using WeMovieSync.Application.Errors;
 using WeMovieSync.Application.Interfaces;
-using WeMovieSync.Core.Models;
+
 
 namespace WeMovieSync.Application.Services
 {
@@ -32,7 +26,7 @@ namespace WeMovieSync.Application.Services
         {
             int limit = 20;
 
-            if (!await _chatRepository.IsUserInChatAsync(currentUserId, chatId))
+            if (!await _chatRepository.IsUserInRoomAsync(currentUserId, chatId))
             {
                 return ChatErrors.UserNotInChat;
             }
@@ -63,13 +57,13 @@ namespace WeMovieSync.Application.Services
             }
 
             // Checking access to chat
-            if (!await _chatRepository.IsUserInChatAsync(currentUserId, dto.ChatId))
+            if (!await _chatRepository.IsUserInRoomAsync(currentUserId, dto.RoomId))
             {
                 return ChatErrors.UserNotInChat;
             }
 
             var message = await _messageRepository.AddMsgAsync(
-                chatId: dto.ChatId,
+                chatId: dto.RoomId,
                 senderId: currentUserId,
                 text: dto.Text
             );
@@ -90,7 +84,7 @@ namespace WeMovieSync.Application.Services
                 return MessagesErrors.MessageNotFound;
             }
 
-            var isInChat = await _chatRepository.IsUserInChatAsync(userId, message.ChatId);
+            var isInChat = await _chatRepository.IsUserInRoomAsync(userId, message.ChatId);
             if (!isInChat)
             {
                 return ChatErrors.UserNotInChat;
@@ -105,7 +99,7 @@ namespace WeMovieSync.Application.Services
         public async Task<ErrorOr<Success>> MarkAllAsReadAsync(long currentUserId, long chatId)
         {
             // Проверка доступа к чату
-            if (!await _chatRepository.IsUserInChatAsync(currentUserId, chatId))
+            if (!await _chatRepository.IsUserInRoomAsync(currentUserId, chatId))
                 return ChatErrors.UserNotInChat;
 
             // Получаем все непрочитанные сообщения
@@ -131,7 +125,7 @@ namespace WeMovieSync.Application.Services
             }
 
             // Проверка доступа к чату
-            if (!await _chatRepository.IsUserInChatAsync(userId, message.ChatId))
+            if (!await _chatRepository.IsUserInRoomAsync(userId, message.ChatId))
             {
                 return ChatErrors.UserNotInChat;
             }

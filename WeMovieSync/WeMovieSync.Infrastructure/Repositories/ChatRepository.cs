@@ -3,6 +3,7 @@ using WeMovieSync.Core.Models;
 using WeMovieSync.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace WeMovieSync.Infrastructure.Repositories
 {
     public class ChatRepository : IChatRepository
@@ -14,11 +15,18 @@ namespace WeMovieSync.Infrastructure.Repositories
             _context = context;
         }
 
-        // Chats
         public async Task AddChatAsync(Chat chat)
         {
             await _context.Chats.AddAsync(chat);
-            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Chat?> GetWatchRoomByIdAsync(long chatId)
+        {
+            return await _context.Chats
+                .Include(c => c.CurrentFilm)
+                .Include(c => c.Members).ThenInclude(m => m.User)
+                .Include(c => c.Messages.OrderByDescending(m => m.SentAt).Take(1))
+                .FirstOrDefaultAsync(c => c.Id == chatId && c.IsWatchRoom);
         }
 
         public async Task DeleteChatAsync(long chatId)
@@ -48,7 +56,12 @@ namespace WeMovieSync.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        // Members
+        public async Task<bool> IsUserInRoomAsync(long userId, long roomId)
+        {
+            return await _context.ChatMembers
+                .AnyAsync(cm => cm.ChatId == roomId && cm.UserId == userId);
+        }
+
         public async Task<bool> IsUserInChatAsync(long userId, long chatId)
         {
             return await _context.ChatMembers
@@ -69,7 +82,7 @@ namespace WeMovieSync.Infrastructure.Repositories
         public async Task RemoveMemberAsync(long chatId, long userId)
         {
             var member = await _context.ChatMembers
-                .FirstOrDefaultAsync(cm => cm.ChatId == chatId && cm.UserId != userId);
+                .FirstOrDefaultAsync(cm => cm.ChatId == chatId && cm.UserId == userId);
 
             if (member != null)
             {
@@ -77,21 +90,47 @@ namespace WeMovieSync.Infrastructure.Repositories
             }
         }
 
-        public async Task<Chat> FindPrivateChatBetweenAsync(long chatId, long userId)
+        public async Task UpdateWatchRoomStateAsync(
+         long roomId,
+         long? filmId,
+         double positionSeconds,
+         bool isPaused,
+         float playbackRate)
         {
-            var chat = await _context.Chats
-                .Include(c => c.Members)
-                .FirstOrDefaultAsync(c => c.Id == chatId && !c.IsGroup &&
-                    c.Members.Any(m => m.UserId == userId));
+            var room = await _context.Chats.FindAsync(roomId);
+            if (room == null || !room.IsWatchRoom) return;
 
-            if (chat != null)
-            {
-                return chat;
-            }
-            else
-            {
-                return null;
-            }
+            room.CurrentFilmId = filmId;
+            room.CurrentPositionSeconds = positionSeconds;
+            room.IsPaused = isPaused;
+            room.PlaybackRate = playbackRate;
+            room.LastActivityAt = DateTime.UtcNow;
+
+            _context.Chats.Update(room);
+        }
+
+        public async Task<List<Chat>> GetUserRoomsAsync(long userId)
+        {
+            return await _context.Chats
+                .Include(c => c.Members)
+                .Where(c => c.Members.Any(m => m.UserId == userId) && c.IsWatchRoom)
+                .OrderByDescending(c => c.LastActivityAt)
+                .ToListAsync();
+        }
+
+        public async Task SetHostAsync(long chatId, long userId)
+        {
+            var chat = await _context.Chats.FindAsync(chatId);
+            if (chat == null || !chat.IsWatchRoom)
+                return;
+
+            chat.HostUserId = userId;
+            _context.Chats.Update(chat);
+        }
+
+        public async Task UpdateChatAsync(Chat chat)
+        {
+            _context.Chats.Update(chat);
         }
 
         public async Task SaveChangesAsync()

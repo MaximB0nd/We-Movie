@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeMovieSync.Core.Models;
+﻿using WeMovieSync.Core.Models;
 using WeMovieSync.Application.DTOs;
-using WeMovieSync.Application.Errors;
 using ErrorOr;
 
 namespace WeMovieSync.Application.Interfaces
@@ -13,13 +7,16 @@ namespace WeMovieSync.Application.Interfaces
     public interface IFilmCatalogRepository
     {
         // Получение всех фильмов в каталоге
-        Task<FilmsResponce> GetAllFilms();
+        Task<FilmsResponce> GetAllFilmsAsync();
 
         // Получение полной информации о выбранном фильме
-        Task<ErrorOr<FullFilmInfoResponce>> GetFilmById(long token);
+        Task<ErrorOr<FullFilmInfoResponce>> GetFilmByIdAsync(long token);
+
+        // Получение объекта фильма из каталога для сервиса чатов
+        Task<ErrorOr<FilmCatalog>> GetFilmObjectByIdAsync(long tocken);
 
         // Проверка что фильм существует
-        Task<bool> IsFilmExists(long token);
+        Task<bool> IsFilmExistsAsync(long token);
 
         Task SaveChangesAsync();
     }

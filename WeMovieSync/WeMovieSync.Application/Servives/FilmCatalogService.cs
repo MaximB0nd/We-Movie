@@ -21,16 +21,16 @@ namespace WeMovieSync.Application.Servives
 
         public async Task<ErrorOr<FilmsResponce>> GetAllFilms()
         {
-            return await _filmCatalogRepository.GetAllFilms();
+            return await _filmCatalogRepository.GetAllFilmsAsync();
         }
 
         public async Task<ErrorOr<FullFilmInfoResponce>> GetFullFilmInfo(long token)
         {
-            if (!await _filmCatalogRepository.IsFilmExists(token)) {
+            if (!await _filmCatalogRepository.IsFilmExistsAsync(token)) {
                 return FilmCatalogErrors.FilmNotFound(token);
             }
 
-            return await _filmCatalogRepository.GetFilmById(token);
+            return await _filmCatalogRepository.GetFilmByIdAsync(token);
         }
     }
 }

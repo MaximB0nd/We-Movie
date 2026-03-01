@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WeMovieSync.Application.Extensions
@@ -17,6 +17,7 @@ namespace WeMovieSync.Application.Extensions
                     ErrorType.Unauthorized => new UnauthorizedObjectResult(error.Description),
                     ErrorType.NotFound => new NotFoundObjectResult(error.Description),
                     ErrorType.Validation => new BadRequestObjectResult(error.Description),
+                    ErrorType.Forbidden => new ObjectResult(error.Description) { StatusCode = 403 },
                     _ => new ObjectResult(error.Description) { StatusCode = 500 }
                 };
             }
