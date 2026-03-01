@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using WeMovieSync.API.Hubs;
 using WeMovieSync.Application.Interfaces;
 using WeMovieSync.Application.Services;
 using WeMovieSync.Application.Servives;
@@ -88,6 +88,9 @@ builder.Services.AddScoped<IMessagesRepository, MessageRepository>();
 builder.Services.AddScoped<IFilmCatalogRepository, FilmCatalogRepository>();
 builder.Services.AddScoped<IFilmCatalogService, FilmCatalogService>();
 
+// Web Socket
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Middleware
@@ -116,5 +119,8 @@ if (app.Environment.IsProduction() || app.Environment.IsDevelopment() || app.Env
     db.Database.Migrate();  // применяет миграции автоматически при запуске
     await FilmsSeeder.Initialize(db); // Автоматическое заполнение БД фильмами
 }
+
+// Connect service of web-socket
+app.MapHub<WatchHub>("/watchHub");
 
 app.Run();

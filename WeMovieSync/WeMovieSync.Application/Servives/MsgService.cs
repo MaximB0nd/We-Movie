@@ -1,14 +1,8 @@
 ﻿using ErrorOr;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WeMovieSync.Application.DTOs;
 using WeMovieSync.Application.Errors;
 using WeMovieSync.Application.Interfaces;
-using WeMovieSync.Core.Models;
+
 
 namespace WeMovieSync.Application.Services
 {
@@ -63,13 +57,13 @@ namespace WeMovieSync.Application.Services
             }
 
             // Checking access to chat
-            if (!await _chatRepository.IsUserInRoomAsync(currentUserId, dto.ChatId))
+            if (!await _chatRepository.IsUserInRoomAsync(currentUserId, dto.RoomId))
             {
                 return ChatErrors.UserNotInChat;
             }
 
             var message = await _messageRepository.AddMsgAsync(
-                chatId: dto.ChatId,
+                chatId: dto.RoomId,
                 senderId: currentUserId,
                 text: dto.Text
             );

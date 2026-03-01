@@ -155,7 +155,7 @@ namespace WeMovieSync.Application.Services
             {
                 return Error.Forbidden("Только хозяин или модератор может привязывать фильм");
             }
-
+            
             var filmResult = await _filmCatalogRepository.GetFilmObjectByIdAsync(token);
             if (filmResult.IsError)
             {
@@ -222,42 +222,52 @@ namespace WeMovieSync.Application.Services
         {
             var room = await _chatRepository.GetByIdAsync(roomId);
             if (room == null || !room.IsWatchRoom)
-            {
                 return ChatErrors.ChatNotFound;
-            }
 
             var member = room.Members.FirstOrDefault(m => m.UserId == userId);
             if (member == null)
-            {
                 return ChatErrors.UserNotInChat;
-            }
 
             if (!IsHostOrModerator(member.Role))
-            {
                 return Error.Forbidden("Нет прав управлять воспроизведением");
-            }
 
-            if (action.PositionSeconds.HasValue)
+            // Обработка разных типов действий
+            if (action.Action == "play")
+            {
+                room.IsPaused = false;
+            }
+            else if (action.Action == "pause")
+            {
+                room.IsPaused = true;
+            }
+            else if (action.Action == "seek" && action.PositionSeconds.HasValue)
             {
                 room.CurrentPositionSeconds = action.PositionSeconds.Value;
             }
-
-            if (action.IsPaused.HasValue)
-            {
-                room.IsPaused = action.IsPaused.Value;
-            }
-
-            if (action.PlaybackRate.HasValue)
+            else if (action.Action == "rate" && action.PlaybackRate.HasValue)
             {
                 room.PlaybackRate = action.PlaybackRate.Value;
             }
+            else if (action.Action == "changeFilm" && action.NewFilmToken.HasValue)
+            {
+                // Здесь можно вызвать метод смены фильма
+                room.CurrentFilmId = action.NewFilmToken.Value;
+                // Можно сбросить позицию и паузу
+                room.CurrentPositionSeconds = 0;
+                room.IsPaused = true;
+            }
 
             room.LastActivityAt = DateTime.UtcNow;
-
             _chatRepository.UpdateChatAsync(room);
             await _chatRepository.SaveChangesAsync();
 
             return Result.Success;
+        }
+
+        // Определяет пользовтель к комнате или нет 
+        public async Task<bool> IsUserInRoomAsync(long userId, long roomId)
+        {
+            return await _chatRepository.IsUserInRoomAsync(userId, roomId);
         }
 
         // Получить текущее состояние плеера (доступно всем участникам комнаты)

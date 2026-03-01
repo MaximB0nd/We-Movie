@@ -17,6 +17,9 @@ namespace WeMovieSync.Application.Interfaces
 
         // Удалить участника из группового чата (только админ)
         Task<ErrorOr<Success>> RemoveMemberAsync(long currentUserId, long chatId, long userIdToRemove);
+        
+        // Определяет пользователь в команте или нет
+        Task<bool> IsUserInRoomAsync(long userId, long roomId);
 
         // НОВЫЕ МЕТОДЫ
         Task<ErrorOr<long>> CreateWatchRoomAsync(long creatorId, string? roomName = null);
