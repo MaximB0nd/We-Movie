@@ -1,0 +1,29 @@
+services:
+  gigachat-microservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Добавляем явное указание не искать в registry
+      pull: false
+      network: host
+    image: gigachat-microservice:local  # Меняем тег, чтобы не путать с registry
+    container_name: gigachat-microservice
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - GIGACHAT_CLIENT_ID=${GIGACHAT_CLIENT_ID}
+      - GIGACHAT_CLIENT_SECRET=${GIGACHAT_CLIENT_SECRET}
+      - MODEL=${MODEL}
+      - SYSTEM_INSTRUCTION=${SYSTEM_INSTRUCTION}
+      - DEBUG=${DEBUG}
+      - VERIFY_SSL=${VERIFY_SSL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    volumes:
+      - ./src:/app/src
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # Отключаем попытки пуллинга
+    pull_policy: never
