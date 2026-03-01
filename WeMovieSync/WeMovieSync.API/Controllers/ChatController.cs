@@ -46,7 +46,7 @@ namespace WeMovieSync.API.Controllers
             try
             {
                 var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-                var result = await _chatService.CreateWatchRoomAsync(userId, dto.token, dto.Name);
+                var result = await _chatService.CreateWatchRoomAsync(userId, dto.Name);
                 return result.ToActionResult();
             }
             catch (Exception)
@@ -98,6 +98,23 @@ namespace WeMovieSync.API.Controllers
             {
                 var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
                 var result = await _chatService.RemoveMemberAsync(userId, chatId, dto.UserId);
+                return result.ToActionResult();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        // PUT: connect room with film
+        [Authorize]
+        [HttpPut("rooms/{roomId}/connect-film")]
+        public async Task<IActionResult> ConnectFilmAndRoom(long roomId, [FromBody] ConnectFilmRequestDTO dto)
+        {
+            try
+            {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var result = await _chatService.ConnectRoomAndFilmAsync(roomId, dto.Token, userId);
                 return result.ToActionResult();
             }
             catch (Exception)

@@ -52,20 +52,13 @@ namespace WeMovieSync.Application.Services
         }
 
         // Создать новую комнату просмотра
-        public async Task<ErrorOr<long>> CreateWatchRoomAsync(long creatorId, long filmId, string? roomName = null)
+        public async Task<ErrorOr<long>> CreateWatchRoomAsync(long creatorId, string? roomName = null)
         {
-            var filmResult = await _filmCatalogRepository.GetFilmObjectByIdAsync(filmId);
-            if (filmResult.IsError)
-                return filmResult.Errors;
-
-            var film = filmResult.Value;
-
             var room = new Chat
             {
                 IsWatchRoom = true,
-                Name = roomName ?? film.FilmName,
+                Name = roomName,
                 HostUserId = creatorId,
-                CurrentFilmId = filmId,
                 CurrentPositionSeconds = 0,
                 IsPaused = true,
                 PlaybackRate = 1.0f,
@@ -139,6 +132,52 @@ namespace WeMovieSync.Application.Services
             await _chatRepository.SaveChangesAsync();
 
             return Result.Success;
+        }
+
+        public async Task<ErrorOr<FilmAndRoomConnectionResponceDTO>> ConnectRoomAndFilmAsync(long roomId,
+                                                                                             long token,
+                                                                                             long userId)
+        {
+            var room = await _chatRepository.GetWatchRoomByIdAsync(roomId);
+            if (room == null || !room.IsWatchRoom)
+            {
+                return ChatErrors.ChatNotFound;
+            }
+
+            // Проверка прав — только host или moderator
+            var member = room.Members.FirstOrDefault(m => m.UserId == userId);
+            if (member == null)
+            {
+                return ChatErrors.UserNotInChat;
+            }
+
+            if (!IsHostOrModerator(member.Role))
+            {
+                return Error.Forbidden("Только хозяин или модератор может привязывать фильм");
+            }
+
+            var filmResult = await _filmCatalogRepository.GetFilmObjectByIdAsync(token);
+            if (filmResult.IsError)
+            {
+                return FilmCatalogErrors.FilmNotFoundByToken(token);
+            }
+
+            var film = filmResult.Value;
+
+            room.CurrentFilm = film;
+            room.CurrentFilmId = film.Token;
+            room.LastActivityAt = DateTime.UtcNow;
+
+            await _chatRepository.UpdateChatAsync(room);
+            await _chatRepository.SaveChangesAsync();
+
+            FilmAndRoomConnectionResponceDTO result = new FilmAndRoomConnectionResponceDTO
+            {
+                FilmName = film.FilmName,
+                mediaLink = film.MediaLink
+            };
+
+            return result;
         }
 
         // Удалить участника (только host или moderator)

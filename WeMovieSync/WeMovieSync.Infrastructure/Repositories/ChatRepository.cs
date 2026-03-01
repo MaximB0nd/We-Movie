@@ -2,7 +2,7 @@
 using WeMovieSync.Core.Models;
 using WeMovieSync.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using ErrorOr;
+
 
 namespace WeMovieSync.Infrastructure.Repositories
 {
@@ -82,7 +82,7 @@ namespace WeMovieSync.Infrastructure.Repositories
         public async Task RemoveMemberAsync(long chatId, long userId)
         {
             var member = await _context.ChatMembers
-                .FirstOrDefaultAsync(cm => cm.ChatId == chatId && cm.UserId != userId);
+                .FirstOrDefaultAsync(cm => cm.ChatId == chatId && cm.UserId == userId);
 
             if (member != null)
             {

@@ -19,9 +19,10 @@ namespace WeMovieSync.Application.Interfaces
         Task<ErrorOr<Success>> RemoveMemberAsync(long currentUserId, long chatId, long userIdToRemove);
 
         // НОВЫЕ МЕТОДЫ
-        Task<ErrorOr<long>> CreateWatchRoomAsync(long creatorId, long filmId, string? roomName = null);
+        Task<ErrorOr<long>> CreateWatchRoomAsync(long creatorId, string? roomName = null);
         Task<ErrorOr<Success>> UpdatePlayerStateAsync(long roomId, long userId, PlayerActionDTO action);
         Task<ErrorOr<PlayerStateDTO>> GetPlayerStateAsync(long roomId);
+        Task<ErrorOr<FilmAndRoomConnectionResponceDTO>> ConnectRoomAndFilmAsync(long roomId, long tocken, long userId);
 
         // Назначение модератора
         Task<ErrorOr<Success>> GrantModeratorRoleAsync(long currentUserId, long roomId, long targetUserId);
