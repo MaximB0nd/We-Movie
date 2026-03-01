@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using WeMovieSync.Application.DTOs;
 using WeMovieSync.Application.Interfaces;
-using WeMovieSync.Application.Servives;
 
 namespace WeMovieSync.API.Hubs
 {
@@ -123,18 +121,36 @@ namespace WeMovieSync.API.Hubs
         {
             var userId = GetUserId();
 
-            // Здесь можно добавить логику сохранения сообщения в БД через MsgService,
-            // но для простоты сразу рассылаем
-            await _msgService.SendMsgAsync(dto, userId);
-            
+            var sendResult = await _msgService.SendMsgAsync(dto, userId);
+
+            if (sendResult.IsError)
+            {
+                await Clients.Caller.SendAsync("Error", sendResult.Errors.FirstOrDefault().Description ?? "Ошибка отправки сообщения");
+                return;
+            }
+
+            long messageId = sendResult.Value;
+
+            // Получаем полное сообщение (с ID, временем и т.д.)
+            var message = await _msgService.GetMsgsAsync(userId, dto.RoomId, null); // или отдельный метод GetById
+            var sentMessage = message.Value.FirstOrDefault(m => m.MessageId == messageId);
+
+            if (sentMessage == null)
+            {
+                return;
+            }
 
             string groupName = $"room_{dto.RoomId}";
+
+            // Рассылаем всем в комнате
             await Clients.Group(groupName).SendAsync("ReceiveMessage", new
             {
-                UserId = userId,
-                Nickname = Context.User?.Identity?.Name ?? "Аноним",
-                Text = dto.Text,
-                SentAt = DateTime.UtcNow
+                MessageId = sentMessage.MessageId,
+                UserId = sentMessage.SenderId,
+                Nickname = sentMessage.SenderNickname,
+                Text = sentMessage.Text,
+                SentAt = sentMessage.SentAt,
+                IsReadByCurrentUser = false // для отправителя false, для других true или позже
             });
         }
 
