@@ -146,6 +146,24 @@ class OnboardingContainerVC: BaseVC {
     @objc private func skipButtonTapped() {
         coordinator?.showAuth()
     }
+
+    override func applyLightTheme() {
+        super.applyLightTheme()
+        pageControl.pageIndicatorTintColor = .accentGreen
+        pageControl.currentPageIndicatorTintColor = .accentPink
+        nextButton.backgroundColor = .accentPink
+        nextButton.setTitleColor(.accentWhite, for: .normal)
+        skipButton.setTitleColor(.accentBlue, for: .normal)
+    }
+
+    override func applyDarkTheme() {
+        super.applyDarkTheme()
+        pageControl.pageIndicatorTintColor = .accentGreen
+        pageControl.currentPageIndicatorTintColor = .accentPink
+        nextButton.backgroundColor = .accentPink
+        nextButton.setTitleColor(.accentWhite, for: .normal)
+        skipButton.setTitleColor(.accentWhite, for: .normal)
+    }
 }
 
 // MARK: - UIPageViewControllerDataSource

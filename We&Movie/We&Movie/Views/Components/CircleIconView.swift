@@ -9,6 +9,12 @@ import UIKit
 
 class CircleIconView: UIView {
     
+    var iconColor: UIColor? {
+        get {
+            iconImageView.tintColor
+        }
+    }
+    
     private let iconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -44,8 +50,9 @@ class CircleIconView: UIView {
     func configure(backgroundColor: UIColor, iconName: String? = nil, iconImage: UIImage? = nil, assetImageName: String? = nil, iconColor: UIColor) {
         self.backgroundColor = backgroundColor
         if let assetImageName = assetImageName {
-            iconImageView.image = UIImage(named: assetImageName)
-            iconImageView.tintColor = nil
+            let image = UIImage(named: assetImageName)
+            iconImageView.image = image?.withRenderingMode(.alwaysTemplate)
+            iconImageView.tintColor = iconColor
         } else if let iconName = iconName {
             iconImageView.image = UIImage(systemName: iconName)
             iconImageView.tintColor = iconColor
