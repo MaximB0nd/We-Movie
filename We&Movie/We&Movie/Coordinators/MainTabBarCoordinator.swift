@@ -24,33 +24,29 @@ class MainTabBarCoordinator: Coordinator {
         transitionType: CATransitionType? = nil,
         direction: CATransitionSubtype = .fromRight
     ) {
-        let homeCoordinator = HomeCoordinator(navigationController: UINavigationController())
-        let searchCoordinator = SearchCoordinator(navigationController: UINavigationController())
-        let favoritesCoordinator = FavoritesCoordinator(navigationController: UINavigationController())
+        let kinotekaCoordinator = HomeCoordinator(navigationController: UINavigationController())
+        let roomsCoordinator = RoomsCoordinator(navigationController: UINavigationController())
+        let kinomanCoordinator = KinomanCoordinator(navigationController: UINavigationController())
         let profileCoordinator = ProfileCoordinator(navigationController: UINavigationController())
         profileCoordinator.parentCoordinator = self
-        let settingsCoordinator = SettingsCoordinator(navigationController: UINavigationController())
-        
-        addChildCoordinator(homeCoordinator)
-        addChildCoordinator(searchCoordinator)
-        addChildCoordinator(favoritesCoordinator)
+
+        addChildCoordinator(kinotekaCoordinator)
+        addChildCoordinator(roomsCoordinator)
+        addChildCoordinator(kinomanCoordinator)
         addChildCoordinator(profileCoordinator)
-        addChildCoordinator(settingsCoordinator)
-        
-        homeCoordinator.start()
-        searchCoordinator.start()
-        favoritesCoordinator.start()
+
+        kinotekaCoordinator.start()
+        roomsCoordinator.start()
+        kinomanCoordinator.start()
         profileCoordinator.start()
-        settingsCoordinator.start()
-        
+
         tabBarController.viewControllers = [
-            homeCoordinator.navigationController,
-            searchCoordinator.navigationController,
-            favoritesCoordinator.navigationController,
-            profileCoordinator.navigationController,
-            settingsCoordinator.navigationController
+            kinotekaCoordinator.navigationController,
+            roomsCoordinator.navigationController,
+            kinomanCoordinator.navigationController,
+            profileCoordinator.navigationController
         ]
-        
+
         setupTabBarItems()
         setViewControllers([tabBarController], transitionType: transitionType, direction: direction)
     }
@@ -61,12 +57,11 @@ class MainTabBarCoordinator: Coordinator {
     
     private func setupTabBarItems() {
         guard let viewControllers = tabBarController.viewControllers else { return }
-        
-        viewControllers[0].tabBarItem = UITabBarItem(title: "Главная", image: UIImage(systemName: "house.fill"), tag: 0)
-        viewControllers[1].tabBarItem = UITabBarItem(title: "Поиск", image: UIImage(systemName: "magnifyingglass"), tag: 1)
-        viewControllers[2].tabBarItem = UITabBarItem(title: "Избранное", image: UIImage(systemName: "heart.fill"), tag: 2)
-        viewControllers[3].tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.fill"), tag: 3)
-        viewControllers[4].tabBarItem = UITabBarItem(title: "Настройки", image: UIImage(systemName: "gearshape.fill"), tag: 4)
+
+        viewControllers[0].tabBarItem = UITabBarItem(title: "КИНОТЕКА", image: UIImage(systemName: "film.stack.fill"), tag: 0)
+        viewControllers[1].tabBarItem = UITabBarItem(title: "КОМНАТЫ", image: UIImage(systemName: "person.3.fill"), tag: 1)
+        viewControllers[2].tabBarItem = UITabBarItem(title: "КИНОМАН", image: UIImage(systemName: "star.fill"), tag: 2)
+        viewControllers[3].tabBarItem = UITabBarItem(title: "ПРОФИЛЬ", image: UIImage(systemName: "person.fill"), tag: 3)
     }
     
     func showAuthFlow() {
