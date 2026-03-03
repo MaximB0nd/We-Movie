@@ -95,6 +95,14 @@ final class APIClient: Sendable {
         return try await data(for: request, requireAuth: requireAuth)
     }
 
+    /// PUT without body (for read/read-all endpoints)
+    func put(path: String, requireAuth: Bool = true) async throws -> Data {
+        var request = URLRequest(url: APIConfig.url(path: path))
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        return try await data(for: request, requireAuth: requireAuth)
+    }
+
     /// DELETE
     func delete(path: String, requireAuth: Bool = true) async throws -> Data {
         var request = URLRequest(url: APIConfig.url(path: path))
