@@ -43,11 +43,12 @@ class MainTabBarCoordinator: Coordinator {
         tabBarController.viewControllers = [
             kinotekaCoordinator.navigationController,
             roomsCoordinator.navigationController,
-            kinomanCoordinator.navigationController,
-            profileCoordinator.navigationController
+            profileCoordinator.navigationController,
+            kinomanCoordinator.navigationController
         ]
 
         setupTabBarItems()
+        setupTabBarMinimizeBehavior()
         setViewControllers([tabBarController], transitionType: transitionType, direction: direction)
     }
     
@@ -60,10 +61,18 @@ class MainTabBarCoordinator: Coordinator {
 
         viewControllers[0].tabBarItem = UITabBarItem(title: "КИНОТЕКА", image: UIImage(systemName: "film.stack.fill"), tag: 0)
         viewControllers[1].tabBarItem = UITabBarItem(title: "КОМНАТЫ", image: UIImage(systemName: "person.3.fill"), tag: 1)
-        viewControllers[2].tabBarItem = UITabBarItem(title: "КИНОМАН", image: UIImage(systemName: "star.fill"), tag: 2)
-        viewControllers[3].tabBarItem = UITabBarItem(title: "ПРОФИЛЬ", image: UIImage(systemName: "person.fill"), tag: 3)
+        viewControllers[2].tabBarItem = UITabBarItem(title: "ПРОФИЛЬ", image: UIImage(systemName: "person.fill"), tag: 2)
+
+        let kinomanItem = UITabBarItem(tabBarSystemItem: .search, tag: 3)
+        kinomanItem.image = UIImage(systemName: "star.fill")
+        kinomanItem.title = ""
+        viewControllers[3].tabBarItem = kinomanItem
     }
-    
+
+    private func setupTabBarMinimizeBehavior() {
+        tabBarController.tabBarMinimizeBehavior = .onScrollDown
+    }
+
     func showAuthFlow() {
         parentCoordinator?.showAuthFlow(
             transitionType: .reveal,
