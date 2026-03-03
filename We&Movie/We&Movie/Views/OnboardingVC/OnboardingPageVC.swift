@@ -84,31 +84,62 @@ class OnboardingPageVC: BaseVC {
         ])
     }
     
+    override func applyLightTheme() {
+        super.applyLightTheme()
+        titleLabel.textColor = .accentBlue
+        descriptionLabel.textColor = .accentBlue
+        applyCircleIconTheme(backgroundColor: pageAccentColor, iconColor: .accentWhite)
+    }
+
+    override func applyDarkTheme() {
+        super.applyDarkTheme()
+        titleLabel.textColor = .accentWhite
+        descriptionLabel.textColor = .accentWhite
+        applyCircleIconTheme(backgroundColor: .accentWhite, iconColor: pageAccentColor)
+    }
+
+    private var pageAccentColor: UIColor {
+        switch pageIndex {
+        case 0: return .accentCyan
+        case 1: return .accentBlue
+        case 2: return .accentPink
+        default: return .accentBlue
+        }
+    }
+
+    private var pageAssetImageName: String? {
+        switch pageIndex {
+        case 0: return "MessageIcon"
+        case 1: return "VideoCameraIcon"
+        case 2: return "StarsIcon"
+        default: return nil
+        }
+    }
+
+    private func applyCircleIconTheme(backgroundColor: UIColor, iconColor: UIColor) {
+        guard let assetImageName = pageAssetImageName else { return }
+        circleIconView.configure(
+            backgroundColor: backgroundColor,
+            assetImageName: assetImageName,
+            iconColor: iconColor
+        )
+    }
+
     private func configureContent() {
         switch pageIndex {
         case 0:
             titleLabel.text = "Общайтесь с друзьями"
             descriptionLabel.text = "Полноценный мессенджер для обсуждения фильмов и планирования просмортов"
-            circleIconView.configure(
-                backgroundColor: .accentCyan,
-                assetImageName: "MessageIcon",
-                iconColor: .accentWhite)
         case 1:
             titleLabel.text = "Смотрите вместе"
             descriptionLabel.text = "Совместные комнаты для просмотра с синхронизацией и общим чатом"
-            circleIconView.configure(
-                backgroundColor: .accentBlue,
-                assetImageName: "VideoCameraIcon",
-                iconColor: .accentWhite)
         case 2:
             titleLabel.text = "Умный помощник"
             descriptionLabel.text = "AI-бот БОБИК поможет подобрать идеальный фильм для вас и вашиз друзей"
-            circleIconView.configure(
-                backgroundColor: .accentPink,
-                assetImageName: "StarsIcon",
-                iconColor: .accentWhite)
         default:
             break
         }
+        applyCircleIconTheme(backgroundColor: traitCollection.userInterfaceStyle == .dark ? .accentWhite : pageAccentColor,
+                            iconColor: traitCollection.userInterfaceStyle == .dark ? pageAccentColor : .accentWhite)
     }
 }

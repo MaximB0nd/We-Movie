@@ -37,7 +37,7 @@ class OnboardingCoordinator: Coordinator {
     
     func showAuth() {
         firstLaunchStorage.markOnboardingCompleted()
-        parentCoordinator?.showAuthFlow()
+        parentCoordinator?.showAuthFlow(transitionType: .reveal, direction: .fromRight)
         finish()
     }
 }
