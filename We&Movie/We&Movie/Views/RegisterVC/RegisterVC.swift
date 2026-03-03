@@ -224,12 +224,14 @@ class RegisterVC: BaseVC {
         setLoading(true)
         Task { [weak self] in
             do {
+                let normalizedNickname = nickname.isEmpty ? nil : nickname
                 _ = try await self?.viewModel.register(
                     name: name,
-                    nickname: nickname,
+                    nickname: normalizedNickname,
                     email: email,
                     password: password
                 )
+                _ = try await self?.viewModel.login(emailOrNickname: email, password: password)
                 await MainActor.run {
                     self?.setLoading(false)
                     self?.coordinator?.showMainTabBar()
@@ -310,9 +312,8 @@ class RegisterVC: BaseVC {
             return false
         }
 
-        
-        if nickname.count > 50 {
-            showMessage("Никнейм максимум 50 символов")
+        if !nickname.isEmpty, nickname.count < 2 {
+            showMessage("Никнейм слишком короткий")
             return false
         }
 

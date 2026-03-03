@@ -17,7 +17,7 @@ extension RegisterVC {
 
         func register(
             name: String,
-            nickname: String,
+            nickname: String?,
             email: String,
             password: String
         ) async throws -> RegisterResponse {

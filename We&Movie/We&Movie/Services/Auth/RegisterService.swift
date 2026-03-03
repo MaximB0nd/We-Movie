@@ -10,17 +10,15 @@ final class RegisterService: Sendable {
 
     static let shared = RegisterService()
     private let client: APIClient
-    private let tokenStorage: TokenStorage
 
-    init(client: APIClient = .shared, tokenStorage: TokenStorage = .shared) {
+    init(client: APIClient = .shared) {
         self.client = client
-        self.tokenStorage = tokenStorage
     }
 
-    /// Registration. Returns tokens and user data on success. Saves tokens to storage.
+    /// Registration. Returns user data on success.
     func register(
         name: String,
-        nickname: String,
+        nickname: String?,
         email: String,
         password: String
     ) async throws -> RegisterResponse {
@@ -31,11 +29,7 @@ final class RegisterService: Sendable {
             email: email,
             password: password
         )
-        let data = try await client.post(path: "api/Auth/register", body: body, requireAuth: false)
-        let response = try client.decode(RegisterResponse.self, from: data)
-        tokenStorage.setAccessToken(response.accessToken)
-        tokenStorage.setRefreshToken(response.refreshToken)
-        tokenStorage.accessTokenExpiresAt = Date().addingTimeInterval(TimeInterval(response.expiresIn))
-        return response
+        let data = try await client.post(path: "api/auth/register", body: body, requireAuth: false)
+        return try client.decode(RegisterResponse.self, from: data)
     }
 }

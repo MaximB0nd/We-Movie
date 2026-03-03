@@ -5,5 +5,8 @@
 
 import Foundation
 
-/// Successful registration response (200 OK) — тот же формат, что и login
-typealias RegisterResponse = LoginResponse
+/// Successful registration response (200 OK)
+struct RegisterResponse: Codable, Sendable {
+    let nickname: String?
+    let email: String
+}
